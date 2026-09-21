@@ -3,6 +3,13 @@
 All notable changes to the Desktop app are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## 0.18.4 – 2026-09-21
+
+### Fixed
+- Kept the native notifications flyout attached to its Nextcloud component so the taskbar and dock bell remains reusable on Nextcloud 34 and 35.
+- Horizontally centered the Nextcloud Assistant control in the moved header-end controls.
+- Removed interrupted desktop selection rectangles on pointer cancellation, lost capture, tab hiding, window blur, and before a new selection starts.
+
 ## 0.18.3 – 2026-09-20
 
 ### Fixed

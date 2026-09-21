@@ -79,7 +79,13 @@
             const rect = menu.getBoundingClientRect();
             const style = getComputedStyle(menu);
             if (rect.height <= 20 || style.display === 'none' || style.visibility === 'hidden') return;
-            if (menu.classList.contains('header-menu__wrapper') && menu.parentElement !== document.body) {
+            // Keep the Vue-owned notifications menu in its component subtree.
+            // Reparenting that wrapper breaks the component's outside-click and
+            // toggle bookkeeping on NC34/35, leaving the bell expanded but its
+            // flyout detached after the first flash. Preserve the established
+            // body-level positioning for other header menus and popovers.
+            const isNotificationMenu = menu.id === 'header-menu-notifications' || Boolean(menu.closest('#notifications'));
+            if (!isNotificationMenu && menu.classList.contains('header-menu__wrapper') && menu.parentElement !== document.body) {
                 document.body.appendChild(menu);
             }
             const slotRect = headerEndSlot.getBoundingClientRect();
@@ -3844,15 +3850,30 @@
 
         // --- rubber-band selection on empty desktop ---
         let band = null;
+        const finishBandSelection = (clearOnClick = false) => {
+            if (!band) {
+                // Also recover from an earlier interrupted drag whose state was lost.
+                layer.querySelectorAll('.desktop-band').forEach((el) => el.remove());
+                return;
+            }
+            const finishedBand = band;
+            band = null;
+            if (finishedBand.el) finishedBand.el.remove();
+            if (clearOnClick && !finishedBand.moved && !finishedBand.additive) clearSelection();
+            try {
+                if (stage.hasPointerCapture(finishedBand.pointerId)) stage.releasePointerCapture(finishedBand.pointerId);
+            } catch (err) { /* capture may already have been released */ }
+        };
         stage.addEventListener('pointerdown', (e) => {
             if (e.button !== 0 || e.target !== stage) return; // only empty desktop
+            finishBandSelection();
             const rect = stage.getBoundingClientRect();
-            band = { x0: e.clientX - rect.left, y0: e.clientY - rect.top, el: null, additive: e.ctrlKey || e.metaKey, moved: false };
+            band = { pointerId: e.pointerId, x0: e.clientX - rect.left, y0: e.clientY - rect.top, el: null, additive: e.ctrlKey || e.metaKey, moved: false };
             if (!band.additive) clearSelection();
             stage.setPointerCapture(e.pointerId);
         });
         stage.addEventListener('pointermove', (e) => {
-            if (!band) return;
+            if (!band || e.pointerId !== band.pointerId) return;
             const rect = stage.getBoundingClientRect();
             const x1 = e.clientX - rect.left, y1 = e.clientY - rect.top;
             if (!band.moved && Math.abs(x1 - band.x0) < 3 && Math.abs(y1 - band.y0) < 3) return;
@@ -3868,11 +3889,18 @@
             });
         });
         stage.addEventListener('pointerup', (e) => {
-            if (!band) return;
-            try { stage.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
-            if (band.el) band.el.remove();
-            if (!band.moved && !band.additive) clearSelection();
-            band = null;
+            if (!band || e.pointerId !== band.pointerId) return;
+            finishBandSelection(true);
+        });
+        stage.addEventListener('pointercancel', (e) => {
+            if (band && e.pointerId === band.pointerId) finishBandSelection();
+        });
+        stage.addEventListener('lostpointercapture', (e) => {
+            if (band && e.pointerId === band.pointerId) finishBandSelection();
+        });
+        window.addEventListener('blur', () => finishBandSelection());
+        document.addEventListener('visibilitychange', () => {
+            if (document.hidden) finishBandSelection();
         });
 
         let icons = []; // current icon elements, in placement-priority order

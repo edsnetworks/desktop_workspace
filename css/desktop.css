@@ -462,10 +462,23 @@ body:has(#desktop-root) .content {
 }
 
 #desktop-root .desktop-header-end-slot .header-end > #notifications > .header-menu,
+#desktop-root .desktop-header-end-slot .header-end > #assistant,
+#desktop-root .desktop-header-end-slot .header-end > #assistant > .header-menu,
 #desktop-root .desktop-header-end-slot .header-end > .header-menu {
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
+}
+
+#desktop-root .desktop-header-end-slot .header-end > #assistant {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+}
+
+#desktop-root .desktop-header-end-slot .header-end > #assistant > button,
+#desktop-root .desktop-header-end-slot .header-end > #assistant > [data-v-app] > button {
+    margin: auto !important;
 }
 
 #desktop-root .desktop-header-end-slot .header-end > #notifications {
