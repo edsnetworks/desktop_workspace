@@ -1,0 +1,24 @@
+        // [macOS preset] Reuse one Files window instead of opening a new one for every folder.
+        function openFilesWindowReuse({ appId, title, subtitle = '', href, icon = '' }) {
+            const isFilesEntry = (entry) => {
+                const h = String(entry.app && entry.app.href || '');
+                return /\/apps\/(?:files|desktop_workspace\/files)(?:[\/?#]|$)/.test(h) && !/trashbin|\/files\/viewer/.test(h)
+                    && !!entry.window.querySelector('iframe.desktop-window-iframe');
+            };
+            let targetId = null;
+            for (const [id, entry] of windows) {
+                if (!isFilesEntry(entry)) continue;
+                targetId = id;
+                if (entry.window.classList.contains('is-focused')) break;
+            }
+            if (!targetId) { openExternalWindow({ appId, title, subtitle, href, icon }); return; }
+            const entry = windows.get(targetId);
+            const iframe = entry.window.querySelector('iframe.desktop-window-iframe');
+            const abs = new URL(href, window.location.origin).href;
+            try { iframe.contentWindow.location.replace(abs); } catch (e) { iframe.src = abs; }
+            entry.app.href = abs;
+            setWindowMinimized(targetId, false);
+            focusWindow(targetId);
+            setWindowMeta(targetId, { title, subtitle, icon });
+        }
+

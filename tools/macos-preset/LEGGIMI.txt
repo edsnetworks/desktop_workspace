@@ -1,0 +1,4 @@
+Preset "macOS" per Desktop Workspace (testato su 0.18.4)
+1) sudo bash install-macos.sh <cartella app> [macos-decoration.css]
+2) Impostazioni personali -> Desktop -> "Decoration style" = macOS (e Icon style = macOS)
+Rollback: sudo bash uninstall-macos.sh <cartella app>

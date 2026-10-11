@@ -11,6 +11,7 @@ class DecorationService {
     public const STANDARD = 'standard';
     public const REDMOND = 'redmond';
     public const RETRO = 'retro';
+    public const MACOS = 'macos';
     public const FOLLOW_NEXTCLOUD = 'nextcloud';
     public const LIGHT = 'light';
     public const DARK = 'dark';
@@ -37,7 +38,7 @@ class DecorationService {
     }
 
     public function validatedDecoration(string $value): string {
-        return in_array($value, [self::STANDARD, self::REDMOND, self::RETRO], true) ? $value : self::STANDARD;
+        return in_array($value, [self::STANDARD, self::REDMOND, self::RETRO, self::MACOS], true) ? $value : self::STANDARD;
     }
 
     public function validatedColorMode(string $value, string $fallback): string {

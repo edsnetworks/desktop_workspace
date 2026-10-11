@@ -1,0 +1,26 @@
+    // [macOS preset] Before opening a "file" window, ask the server whether the clicked item is
+    // really a folder (language-independent). Folders keep navigating inside the same window.
+    function dwDeferFolderCheck(row, button, sourceApp) {
+        if (row.__dwVerified) { row.__dwVerified = false; return false; }
+        const doc = row.ownerDocument;
+        const name = rowName(row, button);
+        const uid = (window.OC && OC.getCurrentUser && OC.getCurrentUser() || {}).uid || '';
+        if (!name || !uid) return false;
+        const path = joinFilesPath(currentFilesDir(doc), name);
+        const root = (window.OC && OC.getRootPath) ? OC.getRootPath() : '';
+        const url = `${root}/remote.php/dav/files/${encodeURIComponent(uid)}/` + path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+        fetch(url, {
+            method: 'PROPFIND', credentials: 'same-origin', headers: { Depth: '0' },
+            body: '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>',
+        }).then((r) => r.text()).then((x) => /<(?:\w+:)?collection\b/.test(x)).catch(() => false).then((isFolder) => {
+            if (isFolder) {
+                doc.__dwSkip = true;
+                try { button.click(); } finally { doc.__dwSkip = false; }
+            } else {
+                row.__dwVerified = true;
+                openNativeFilesViewerWindow(row, button, sourceApp);
+            }
+        });
+        return true;
+    }
+

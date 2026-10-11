@@ -1,0 +1,16 @@
+    // [macOS preset] Language-independent folder detection for Nextcloud Files rows.
+    // The stock check only knows the English title "Open folder", so in other languages a folder
+    // click was treated as a file and opened a second window.
+    function isFolderRowDeep(row, button) {
+        if (!row) return false;
+        if (row.classList.contains('files-list__row--folder')) return true;
+        const attrs = [row.getAttribute('data-cy-files-list-row-type'), row.dataset && row.dataset.type, row.dataset && row.dataset.mime, row.dataset && row.dataset.mimetype, row.getAttribute('data-type')];
+        if (attrs.some((v) => v && /^(folder|dir|directory|httpd\/unix-directory)$/i.test(v))) return true;
+        const title = (button && (button.getAttribute('title') || button.getAttribute('aria-label'))) || '';
+        if (/^open folder\b/i.test(title)) return true;
+        if (/^(apri|open|ouvrir|öffnen|abrir|abrir)\b.*\b(cartella|folder|dossier|ordner|carpeta|pasta)\b/i.test(title)) return true;
+        const icon = row.querySelector('.files-list__row-icon');
+        if (icon && icon.querySelector('[class*="folder"], img[src*="folder"], svg[class*="folder"]')) return true;
+        return false;
+    }
+

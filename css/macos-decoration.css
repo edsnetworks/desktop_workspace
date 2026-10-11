@@ -1,0 +1,432 @@
+/* macOS decoration for Desktop Workspace.
+ * Frosted-glass title bars, traffic-light window controls, a magnifying glass dock,
+ * squircle app icons with per-app gradients, macOS-style menus and animations.
+ * Light/dark follow the same "desktop-decoration-light" switch used by the other presets.
+ * Loaded AFTER icon-appearance.css and shell-layout.css (see templates/main.php). */
+
+/* ---------- Tokens (root + body, so body-level menus share them) ---------- */
+#desktop-root[data-decoration="macos"],
+body:has(#desktop-root[data-decoration="macos"]) {
+    --mac-font: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "Helvetica Neue", "Inter", system-ui, "Segoe UI", Roboto, sans-serif;
+    --mac-ink: rgba(0, 0, 0, .86);
+    --mac-ink-2: rgba(0, 0, 0, .55);
+    --mac-glass: rgba(246, 246, 248, .72);
+    --mac-glass-strong: rgba(250, 250, 252, .86);
+    --mac-dock-glass: rgba(255, 255, 255, .34);
+    --mac-hairline: rgba(0, 0, 0, .14);
+    --mac-hairline-light: rgba(255, 255, 255, .55);
+    --mac-hover: rgba(0, 0, 0, .06);
+    --mac-accent: #0a64ff;
+    --mac-accent-text: #fff;
+    --mac-shadow: 0 0 0 .5px rgba(0, 0, 0, .28), 0 22px 60px rgba(0, 0, 0, .28), 0 6px 16px rgba(0, 0, 0, .16);
+    --mac-shadow-focus: 0 0 0 .5px rgba(0, 0, 0, .34), 0 28px 80px rgba(0, 0, 0, .36), 0 8px 22px rgba(0, 0, 0, .2);
+    --mac-blur: blur(28px) saturate(180%);
+}
+#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light),
+body:has(#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light)) {
+    --mac-ink: rgba(255, 255, 255, .92);
+    --mac-ink-2: rgba(255, 255, 255, .58);
+    --mac-glass: rgba(44, 44, 48, .72);
+    --mac-glass-strong: rgba(36, 36, 40, .86);
+    --mac-dock-glass: rgba(40, 40, 44, .42);
+    --mac-hairline: rgba(255, 255, 255, .14);
+    --mac-hairline-light: rgba(255, 255, 255, .2);
+    --mac-hover: rgba(255, 255, 255, .1);
+    --mac-shadow: 0 0 0 .5px rgba(0, 0, 0, .7), 0 0 0 1px rgba(255, 255, 255, .09), 0 22px 60px rgba(0, 0, 0, .55), 0 6px 16px rgba(0, 0, 0, .35);
+    --mac-shadow-focus: 0 0 0 .5px rgba(0, 0, 0, .8), 0 0 0 1px rgba(255, 255, 255, .12), 0 30px 90px rgba(0, 0, 0, .62), 0 8px 22px rgba(0, 0, 0, .4);
+}
+
+#desktop-root[data-decoration="macos"] {
+    font-family: var(--mac-font);
+    -webkit-font-smoothing: antialiased;
+    /* Big Sur-style wallpaper, used only when no Nextcloud background image is set. */
+    --desktop-fallback-background:
+        radial-gradient(60% 55% at 15% 12%, rgba(255, 170, 120, .85), transparent 70%),
+        radial-gradient(55% 60% at 88% 18%, rgba(255, 94, 160, .75), transparent 70%),
+        radial-gradient(70% 70% at 70% 95%, rgba(80, 90, 255, .85), transparent 70%),
+        radial-gradient(60% 60% at 8% 92%, rgba(60, 190, 255, .7), transparent 70%),
+        linear-gradient(160deg, #5a3fd0, #b24bd8 45%, #ff7a8a);
+}
+#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light) {
+    --desktop-fallback-background:
+        radial-gradient(60% 55% at 15% 12%, rgba(120, 70, 190, .75), transparent 70%),
+        radial-gradient(55% 60% at 88% 18%, rgba(190, 50, 120, .6), transparent 70%),
+        radial-gradient(70% 70% at 70% 95%, rgba(30, 50, 200, .8), transparent 70%),
+        radial-gradient(60% 60% at 8% 92%, rgba(20, 110, 190, .6), transparent 70%),
+        linear-gradient(160deg, #15123a, #2c1a55 50%, #4a1f55);
+}
+
+/* ---------- Windows ---------- */
+#desktop-root[data-decoration="macos"] .desktop-window {
+    border: 0;
+    border-radius: 12px;
+    background: var(--color-main-background, #fff);
+    box-shadow: var(--mac-shadow);
+    transform-origin: 50% 100%;
+    transition: box-shadow .22s ease, transform .38s cubic-bezier(.32, .72, 0, 1), opacity .28s ease;
+    animation: macos-window-in .26s cubic-bezier(.2, .9, .3, 1.15);
+}
+#desktop-root[data-decoration="macos"] .desktop-window.is-focused { outline: none; box-shadow: var(--mac-shadow-focus); }
+#desktop-root[data-decoration="macos"] .desktop-window.is-maximized { border-radius: 10px; }
+@keyframes macos-window-in {
+    from { opacity: 0; transform: scale(.94); }
+    to   { opacity: 1; transform: scale(1); }
+}
+
+#desktop-root[data-decoration="macos"] .desktop-window-titlebar {
+    height: 40px;
+    min-height: 40px;
+    padding: 0 14px;
+    gap: 10px;
+    /* Controls always on the left, like macOS, whatever the "controls side" setting says. */
+    flex-direction: row-reverse;
+    color: var(--mac-ink);
+    border-bottom: 1px solid var(--mac-hairline);
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, var(--mac-glass-strong), var(--mac-glass));
+    -webkit-backdrop-filter: var(--mac-blur);
+    backdrop-filter: var(--mac-blur);
+    box-shadow: inset 0 1px 0 var(--mac-hairline-light);
+    font-family: var(--mac-font);
+}
+#desktop-root[data-decoration="macos"] .desktop-window-body { height: calc(100% - 40px); }
+#desktop-root[data-decoration="macos"] .desktop-window-title {
+    justify-content: center;
+    text-align: center;
+    margin-right: 76px; /* balances the traffic lights so the title is optically centred */
+}
+#desktop-root[data-decoration="macos"] .desktop-window-title-text { align-items: center; }
+#desktop-root[data-decoration="macos"] .desktop-window-title-text strong { font-size: 13px; font-weight: 600; letter-spacing: -.005em; }
+#desktop-root[data-decoration="macos"] .desktop-window-title-text small { color: var(--mac-ink-2); font-size: 11px; }
+#desktop-root[data-decoration="macos"] .desktop-window:not(.is-focused) .desktop-window-title { opacity: .55; }
+#desktop-root[data-decoration="macos"] .desktop-window-icon {
+    width: 18px; min-width: 18px; height: 18px; border-radius: 4px;
+}
+#desktop-root[data-decoration="macos"] .desktop-window-icon img { width: 15px !important; height: 15px !important; max-width: 15px !important; max-height: 15px !important; }
+
+/* Traffic lights */
+#desktop-root[data-decoration="macos"] .desktop-window-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: 0 0 auto;
+}
+#desktop-root[data-decoration="macos"] .desktop-window-actions-divider { display: none; }
+#desktop-root[data-decoration="macos"] .desktop-window-actions [data-action="close"]    { order: 1; --tl: #ff5f57; --tl-edge: #e0443e; --tl-glyph: "\00d7"; }
+#desktop-root[data-decoration="macos"] .desktop-window-actions [data-action="minimize"] { order: 2; --tl: #febc2e; --tl-edge: #d9a022; --tl-glyph: "\2212"; }
+#desktop-root[data-decoration="macos"] .desktop-window-actions [data-action="maximize"] { order: 3; --tl: #28c840; --tl-edge: #1ea834; --tl-glyph: "+"; }
+#desktop-root[data-decoration="macos"] .desktop-window-actions [data-action="reload"]   { order: 4; }
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="close"],
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="minimize"],
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="maximize"] {
+    position: relative;
+    width: 12px; height: 12px; min-width: 12px; max-width: 12px; min-height: 12px; max-height: 12px; flex: 0 0 12px;
+    padding: 0;
+    border: .5px solid var(--tl-edge);
+    border-radius: 50% !important;
+    background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--tl) 70%, #fff), var(--tl) 70%);
+    box-shadow: inset 0 .5px 0 rgba(255, 255, 255, .45);
+    color: rgba(0, 0, 0, .62);
+    font-size: 0;
+    line-height: 0;
+    transform: none;
+    transition: filter .12s ease;
+}
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="close"]::after,
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="minimize"]::after,
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="maximize"]::after {
+    content: var(--tl-glyph);
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    font: 700 11px/1 var(--mac-font);
+    opacity: 0;
+    transition: opacity .1s ease;
+}
+#desktop-root[data-decoration="macos"] .desktop-window-actions:hover button[data-action="close"]::after,
+#desktop-root[data-decoration="macos"] .desktop-window-actions:hover button[data-action="minimize"]::after,
+#desktop-root[data-decoration="macos"] .desktop-window-actions:hover button[data-action="maximize"]::after,
+#desktop-root[data-decoration="macos"] .desktop-window-actions button:focus-visible::after { opacity: 1; }
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="close"]:active,
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="minimize"]:active,
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="maximize"]:active { filter: brightness(.82); }
+/* Inactive window: grey lights, colour returns on hover */
+#desktop-root[data-decoration="macos"] .desktop-window:not(.is-focused) .desktop-window-actions:not(:hover) button[data-action="close"],
+#desktop-root[data-decoration="macos"] .desktop-window:not(.is-focused) .desktop-window-actions:not(:hover) button[data-action="minimize"],
+#desktop-root[data-decoration="macos"] .desktop-window:not(.is-focused) .desktop-window-actions:not(:hover) button[data-action="maximize"] {
+    --tl: #cfcfd2; --tl-edge: #b9b9bd;
+}
+#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light) .desktop-window:not(.is-focused) .desktop-window-actions:not(:hover) button[data-action="close"],
+#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light) .desktop-window:not(.is-focused) .desktop-window-actions:not(:hover) button[data-action="minimize"],
+#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light) .desktop-window:not(.is-focused) .desktop-window-actions:not(:hover) button[data-action="maximize"] {
+    --tl: #5a5a5f; --tl-edge: #4a4a4f;
+}
+/* The extra "refresh" control stays discreet */
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="reload"] {
+    width: 22px; height: 22px; min-width: 22px; max-width: 22px; min-height: 22px; max-height: 22px; flex: 0 0 22px;
+    margin-left: 4px;
+    padding: 0; border: 0; border-radius: 6px !important;
+    background: transparent; box-shadow: none; transform: none;
+    color: var(--mac-ink-2); font-size: 14px; line-height: 1;
+}
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="reload"]:hover,
+#desktop-root[data-decoration="macos"] .desktop-window-actions button[data-action="reload"]:focus-visible { background: var(--mac-hover); color: var(--mac-ink); outline: none; }
+
+/* ---------- Dock ---------- */
+#desktop-root[data-decoration="macos"] .desktop-taskbar {
+    color: var(--mac-ink);
+    background: var(--mac-dock-glass) !important;
+    -webkit-backdrop-filter: var(--mac-blur) !important;
+    backdrop-filter: var(--mac-blur) !important;
+    border: .5px solid var(--mac-hairline-light);
+    box-shadow: 0 0 0 .5px rgba(0, 0, 0, .18), 0 18px 44px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .35);
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-taskbar {
+    bottom: 10px;
+    height: 70px; min-height: 70px; max-height: 70px;
+    padding: 9px 10px;
+    gap: 8px;
+    border-radius: 24px;
+    align-items: flex-end;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-taskbar-divider {
+    width: 1px; height: 46px; align-self: center; background: var(--mac-hairline); border: 0;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-apps,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-task-list { align-items: flex-end; overflow: visible; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-apps { max-width: min(70vw, 900px); }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app { flex: 0 0 46px; width: 46px !important; height: 46px !important; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-apps { height: 46px; }
+#desktop-root[data-icon-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app .desktop-app-menu-icon,
+#desktop-root[data-icon-decoration="macos"][data-shell-mode="dock"] .desktop-task-icon { width: 46px !important; height: 46px !important; flex: 0 0 46px; }
+
+/* Dock items: no tile around them, the squircle icon IS the item. */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-task-button,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-start {
+    border: 0;
+    border-radius: 22.5%;
+    background: transparent;
+    box-shadow: none;
+    transform-origin: 50% 100%;
+    transition: transform .2s cubic-bezier(.3, 1.35, .5, 1), filter .15s ease;
+    will-change: transform;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app:hover,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app:focus-visible,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app.is-active,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-task-button:hover,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-task-button.is-active {
+    background: transparent;
+    border: 0;
+    outline: none;
+}
+/* Magnification (hovered item + its two neighbours in the same group) */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] :is(.desktop-pinned-app, .desktop-task-button):hover { transform: translateY(-9px) scale(1.5); z-index: 3; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] :is(.desktop-pinned-app, .desktop-task-button):hover + :is(.desktop-pinned-app, .desktop-task-button),
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] :is(.desktop-pinned-app, .desktop-task-button):has(+ :is(.desktop-pinned-app, .desktop-task-button):hover) { transform: translateY(-4px) scale(1.2); z-index: 2; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-start:hover { transform: translateY(-9px) scale(1.5); z-index: 3; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app:active,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-task-button:active { filter: brightness(.85); }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app.is-minimized { opacity: .75; }
+
+/* Running indicator: small dot under the icon */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-pinned-app.is-open::after,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-task-button.is-active::after {
+    bottom: -6px; width: 4px; height: 4px;
+    background: var(--mac-ink); opacity: .75;
+}
+
+/* Launchpad button = the dock's first item */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-start {
+    width: 46px; min-width: 46px; height: 46px;
+    color: #fff;
+    background:
+        radial-gradient(circle at 30% 25%, rgba(255, 255, 255, .35), transparent 55%),
+        linear-gradient(160deg, #8e8e93, #3a3a3c);
+    box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .35), 0 3px 8px rgba(0, 0, 0, .35);
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-waffle i:nth-child(3n+1) { background: #ff5f57; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-waffle i:nth-child(3n+2) { background: #febc2e; }
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-waffle i:nth-child(3n)   { background: #28c840; }
+/* Utilities that live in the dock (fullscreen, clock, Nextcloud controls) */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-fullscreen,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-nextcloud-logo {
+    border: 0; border-radius: 22.5%; color: var(--mac-ink); background: var(--mac-hover); box-shadow: none;
+}
+#desktop-root[data-decoration="macos"] .desktop-clock { color: var(--mac-ink); font-family: var(--mac-font); }
+#desktop-root[data-decoration="macos"] .desktop-clock-time { font-weight: 600; }
+
+/* Classic taskbar mode: a thin translucent bar */
+#desktop-root[data-decoration="macos"][data-shell-mode="taskbar"] .desktop-taskbar {
+    height: 44px; min-height: 44px; max-height: 44px; padding: 5px 10px; gap: 6px;
+    border-width: .5px 0 0 0;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="taskbar"] .taskbar-button,
+#desktop-root[data-decoration="macos"][data-shell-mode="taskbar"] .desktop-task-button {
+    border: 0; border-radius: 8px; color: var(--mac-ink); background: transparent; box-shadow: none;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="taskbar"] .taskbar-button:hover,
+#desktop-root[data-decoration="macos"][data-shell-mode="taskbar"] .desktop-task-button:hover { background: var(--mac-hover); }
+#desktop-root[data-decoration="macos"][data-shell-mode="taskbar"] .desktop-task-button.is-active { background: var(--mac-hover); box-shadow: inset 0 -2px 0 var(--mac-accent); }
+
+/* ---------- Menus: Apps menu, window/task menus, desktop-icon menus ---------- */
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu {
+    font-family: var(--mac-font);
+    color: var(--mac-ink) !important;
+    background: var(--mac-glass) !important;
+    -webkit-backdrop-filter: var(--mac-blur) !important;
+    backdrop-filter: var(--mac-blur) !important;
+    border: .5px solid var(--mac-hairline) !important;
+    border-radius: 12px !important;
+    box-shadow: var(--mac-shadow) !important;
+    animation: macos-menu-in .16s cubic-bezier(.2, .9, .3, 1.1);
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu { border-radius: 18px !important; }
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu { padding: 5px !important; }
+@keyframes macos-menu-in {
+    from { opacity: 0; transform: scale(.96) translateY(4px); }
+    to   { opacity: 1; transform: none; }
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu button,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu button,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile {
+    border: 0 !important;
+    border-radius: 6px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: inherit !important;
+    font: 13px/1.3 var(--mac-font);
+    text-shadow: none;
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu button:hover,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu button:focus-visible,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu button:hover,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu button:focus-visible,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile:hover,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile:focus-visible {
+    background: var(--mac-accent) !important;
+    color: var(--mac-accent-text) !important;
+    outline: none;
+    transform: none;
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-header { border-bottom: .5px solid var(--mac-hairline); }
+body:has(#desktop-root[data-decoration="macos"]) .desktop-unified-search,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-settings-button {
+    border: 0 !important; border-radius: 8px !important; color: var(--mac-ink) !important; background: var(--mac-hover) !important; box-shadow: none !important;
+}
+
+/* ---------- Squircle icons (apps in dock, Apps menu, desktop shortcuts) ---------- */
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-app-menu-icon,
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-task-icon,
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-app-shortcut-circle,
+body[data-desktop-icon-decoration="macos"]:has(#desktop-root) .desktop-start-menu .desktop-app-menu-icon {
+    --mi-a: #5ac8fa; --mi-b: #0a84ff;
+    border: 0 !important;
+    border-radius: 22.5% !important;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, 0) 52%),
+        linear-gradient(160deg, var(--mi-a), var(--mi-b)) !important;
+    box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .35), inset 0 -1px 0 rgba(0, 0, 0, .12), 0 2px 6px rgba(0, 0, 0, .3) !important;
+    clip-path: none !important;
+    display: grid; place-items: center;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-pinned-app .desktop-app-menu-icon,
+#desktop-root[data-icon-decoration="macos"] .desktop-task-icon { width: 100%; height: 100%; }
+#desktop-root[data-icon-decoration="macos"] .desktop-app-tile .desktop-app-menu-icon { width: 36px; height: 36px; flex-basis: 36px; }
+#desktop-root[data-icon-decoration="macos"] .desktop-app-shortcut-circle { width: 56px; height: 56px; }
+/* White glyphs on the coloured tile, whatever the colour mode (beats icon-appearance.css) */
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-task-icon img.desktop-app-glyph,
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-app-menu-icon img.desktop-app-glyph,
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-app-shortcut-circle img.desktop-app-glyph,
+#desktop-root[data-icon-decoration="macos"][data-icon-decoration="macos"] .desktop-fav-icon img.desktop-app-glyph,
+body[data-desktop-icon-decoration="macos"]:has(#desktop-root) .desktop-start-menu .desktop-app-menu-icon img.desktop-app-glyph {
+    filter: brightness(0) saturate(100%) invert(1) drop-shadow(0 1px 1px rgba(0, 0, 0, .25)) !important;
+    width: 58% !important; height: 58% !important;
+}
+
+/* Per-app colours (matched on the app id inside the icon URL) */
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/files/"], img[src*="/files/img"]) { --mi-a: #5bb8ff; --mi-b: #0a64d6; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/calendar/"]) { --mi-a: #ff7a70; --mi-b: #e0302a; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/contacts/"]) { --mi-a: #ffbb55; --mi-b: #ef8200; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/mail/"]) { --mi-a: #6bd0ff; --mi-b: #1c7cf0; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/spreed/"]) { --mi-a: #62e07f; --mi-b: #1ca746; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/notes/"]) { --mi-a: #ffe066; --mi-b: #f0b000; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/tasks/"], img[src*="/apps/deck/"]) { --mi-a: #8c9bff; --mi-b: #4a3fd8; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/photos/"], img[src*="/apps/memories/"]) { --mi-a: #ff86b8; --mi-b: #a45cf0; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/maps/"]) { --mi-a: #7be28a; --mi-b: #1f9f8f; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/forms/"], img[src*="/apps/polls/"]) { --mi-a: #c58cff; --mi-b: #7a35d8; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/richdocuments/"], img[src*="/apps/onlyoffice/"], img[src*="/apps/text/"], img[src*="/apps/collectives/"]) { --mi-a: #59d6d0; --mi-b: #0a8f9a; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/dashboard/"], img[src*="/apps/activity/"]) { --mi-a: #7aa0ff; --mi-b: #3a45d0; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/news/"], img[src*="/apps/bookmarks/"]) { --mi-a: #ff8a6a; --mi-b: #d8362f; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/settings/"], img[src*="/settings/"], img[src*="/core/img/actions/settings"]) { --mi-a: #aeaeb4; --mi-b: #636368; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/dwgviewer/"]) { --mi-a: #5be3a0; --mi-b: #139a6b; }
+#desktop-root[data-icon-decoration="macos"] :is(.desktop-app-menu-icon, .desktop-task-icon, .desktop-app-shortcut-circle):has(img[src*="/apps/archivemanager/"]) { --mi-a: #d2a679; --mi-b: #8d5a2b; }
+
+/* ---------- Desktop icons (Favorites / folder shortcuts) ---------- */
+#desktop-root[data-icon-decoration="macos"] .desktop-fav {
+    border: 0; border-radius: 8px; background: transparent; box-shadow: none; clip-path: none;
+    font-family: var(--mac-font);
+    transition: background .12s ease;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-fav:hover,
+#desktop-root[data-icon-decoration="macos"] .desktop-fav:focus-visible { background: rgba(255, 255, 255, .12) !important; outline: none; filter: none; }
+#desktop-root[data-icon-decoration="macos"] .desktop-fav.is-selected {
+    background: color-mix(in srgb, var(--mac-accent) 55%, transparent) !important;
+    outline: 0; box-shadow: none; filter: none;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-fav-label {
+    color: #fff !important;
+    font-size: 12px; font-weight: 500; text-shadow: 0 1px 3px rgba(0, 0, 0, .75) !important;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-fav.is-selected .desktop-fav-label {
+    background: var(--mac-accent); border-radius: 4px; padding: 0 5px; text-shadow: none !important;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-fav[data-special] .desktop-fav-icon {
+    width: 56px; height: 56px; display: grid; place-items: center;
+    border: 0 !important; border-radius: 22.5% !important; clip-path: none !important; color: #fff !important;
+    background: linear-gradient(180deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, 0) 52%), linear-gradient(160deg, #5bb8ff, #0a64d6) !important;
+    box-shadow: inset 0 0 0 .5px rgba(255, 255, 255, .35), 0 3px 8px rgba(0, 0, 0, .35) !important;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-fav[data-special="trash"] .desktop-fav-icon {
+    background: linear-gradient(180deg, rgba(255, 255, 255, .28), rgba(255, 255, 255, 0) 52%), linear-gradient(160deg, #b8b8be, #6c6c72) !important;
+}
+#desktop-root[data-icon-decoration="macos"] .desktop-fav[data-folder="true"]:not([data-special]) .desktop-fav-icon,
+#desktop-root[data-icon-decoration="macos"] .desktop-fav:not([data-kind="app"]):not([data-special]):not([data-folder="true"]) .desktop-fav-icon {
+    border: 0 !important; background: transparent !important; box-shadow: none !important; clip-path: none !important;
+}
+
+/* ---------- Motion preferences ---------- */
+@media (prefers-reduced-motion: reduce) {
+    #desktop-root[data-decoration="macos"] .desktop-window,
+    body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu,
+    body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu,
+    body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu { animation: none; }
+    #desktop-root[data-decoration="macos"][data-shell-mode="dock"] :is(.desktop-pinned-app, .desktop-task-button, .taskbar-start) { transition: none; transform: none !important; }
+}
+
+/* ---------- Menu bar (js/macos-menubar.js) ---------- */
+#macos-menubar { display: none; }
+body.has-macos-menubar #macos-menubar {
+    position: fixed; inset: 0 0 auto 0; z-index: 100003; height: 28px;
+    display: flex; align-items: center; gap: 4px; padding: 0 10px;
+    font: 500 13px/1 var(--mac-font, -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", system-ui, sans-serif);
+    color: var(--mac-ink, rgba(0,0,0,.86));
+    background: var(--mac-glass, rgba(246,246,248,.72));
+    -webkit-backdrop-filter: blur(28px) saturate(180%); backdrop-filter: blur(28px) saturate(180%);
+    border-bottom: .5px solid var(--mac-hairline, rgba(0,0,0,.14));
+    user-select: none;
+}
+#macos-menubar[hidden] { display: none !important; }
+#macos-menubar .mb-spacer { flex: 1; }
+#macos-menubar .mb-app { font-weight: 700; margin-left: 8px; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#macos-menubar button { all: unset; display: grid; place-items: center; min-width: 26px; height: 22px; border-radius: 5px; cursor: default; color: inherit; }
+#macos-menubar button:hover, #macos-menubar button:focus-visible { background: var(--mac-hover, rgba(0,0,0,.08)); }
+#macos-menubar .mb-clock { margin-left: 8px; font-variant-numeric: tabular-nums; white-space: nowrap; }
+/* Windows and the stage must clear the bar */
+body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-window.is-maximized { inset: 36px 12px 12px !important; }
+body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-favorites { top: 36px; }

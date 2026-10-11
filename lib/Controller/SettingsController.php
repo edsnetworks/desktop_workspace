@@ -397,7 +397,7 @@ class SettingsController extends Controller {
             $result['clockHourCycle'] = $value;
         }
         if ($decoration !== null) {
-            $selected = in_array($decoration, [DecorationService::STANDARD, DecorationService::REDMOND, DecorationService::RETRO], true)
+            $selected = in_array($decoration, [DecorationService::STANDARD, DecorationService::REDMOND, DecorationService::RETRO, DecorationService::MACOS], true)
                 ? $decoration
                 : DecorationService::STANDARD;
             if (!$this->decorationService->userSelectionEnabled()) {

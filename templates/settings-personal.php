@@ -26,6 +26,7 @@ $l = \OC::$server->getL10N('desktop_workspace');
                     <option value="standard" <?= $_['decoration'] === 'standard' ? 'selected' : '' ?>><?= p($l->t('Standard')) ?></option>
                     <option value="redmond" <?= $_['decoration'] === 'redmond' ? 'selected' : '' ?>><?= p($l->t('Redmond')) ?></option>
                     <option value="retro" <?= $_['decoration'] === 'retro' ? 'selected' : '' ?>><?= p($l->t('Retro')) ?></option>
+                    <option value="macos" <?= $_['decoration'] === 'macos' ? 'selected' : '' ?>>macOS</option>
                 </select></p>
             <p><label for="desktop-decoration-color"><?= p($l->t('Color mode')) ?></label>
                 <select id="desktop-decoration-color" <?= $_['userDecorationsEnabled'] ? '' : 'disabled' ?>>
@@ -43,6 +44,7 @@ $l = \OC::$server->getL10N('desktop_workspace');
                     <option value="standard" <?= $_['iconDecoration'] === 'standard' ? 'selected' : '' ?>><?= p($l->t('Standard')) ?></option>
                     <option value="redmond" <?= $_['iconDecoration'] === 'redmond' ? 'selected' : '' ?>><?= p($l->t('Redmond')) ?></option>
                     <option value="retro" <?= $_['iconDecoration'] === 'retro' ? 'selected' : '' ?>><?= p($l->t('Retro')) ?></option>
+                    <option value="macos" <?= $_['iconDecoration'] === 'macos' ? 'selected' : '' ?>>macOS</option>
                 </select></p>
             <p><label for="desktop-icon-color"><?= p($l->t('Icon color mode')) ?></label>
                 <select id="desktop-icon-color" <?= ($_['userDecorationsEnabled'] && !$_['iconDecorationLinked']) ? '' : 'disabled' ?>>
