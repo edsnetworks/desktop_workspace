@@ -65,11 +65,29 @@ grep -q 'value="macos"' "$F" || {
 }
 chown -R --reference="$APP/appinfo/info.xml" "$APP/css/macos-decoration.css" "$APP/lib" "$APP/templates" "$APP/js" 2>/dev/null || true
 
+# 5b) macOS come stile predefinito per tutti gli utenti che non hanno scelto altro
+F="$APP/lib/Service/DecorationService.php"
+grep -q "DEFAULT_STYLE" "$F" || {
+  sed -i "s/    public const MACOS = 'macos';/&\n    public const DEFAULT_STYLE = 'macos';/" "$F"
+  sed -i -e "s/^            self::STANDARD,\$/            self::DEFAULT_STYLE,/" \
+         -e "s/? \$value : self::STANDARD;/? \$value : self::DEFAULT_STYLE;/" \
+         -e "s/'decoration' => self::STANDARD,/'decoration' => self::DEFAULT_STYLE,/" \
+         -e "s/'iconDecoration' => self::STANDARD,/'iconDecoration' => self::DEFAULT_STYLE,/" \
+         -e "s/SettingsController::ICON_DECORATION_KEY, self::STANDARD)/SettingsController::ICON_DECORATION_KEY, self::DEFAULT_STYLE)/" \
+         -e "s/^            return self::STANDARD;/            return self::DEFAULT_STYLE;/" "$F"
+  F2="$APP/lib/Controller/SettingsController.php"
+  sed -i -e "s/'decoration' => DecorationService::STANDARD,/'decoration' => DecorationService::DEFAULT_STYLE,/" \
+         -e "s/'iconDecoration' => DecorationService::STANDARD,/'iconDecoration' => DecorationService::DEFAULT_STYLE,/" \
+         -e "s/: DecorationService::STANDARD;/: DecorationService::DEFAULT_STYLE;/" \
+         -e "s/\$selected = DecorationService::STANDARD;/\$selected = DecorationService::DEFAULT_STYLE;/" "$F2"
+}
 # 6) Verifica
 echo "--- verifica ---"
 ok=1
 chk(){ if grep -q "$2" "$APP/$1"; then echo "OK   $1"; else echo "MANCA $1"; ok=0; fi; }
 chk lib/Service/DecorationService.php "self::MACOS"
+chk lib/Service/DecorationService.php "DEFAULT_STYLE = 'macos'"
+chk lib/Controller/SettingsController.php "DecorationService::DEFAULT_STYLE"
 chk lib/Controller/SettingsController.php "DecorationService::MACOS"
 chk templates/main.php "macos-decoration"
 chk templates/main.php "'macos'"

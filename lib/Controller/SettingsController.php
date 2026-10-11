@@ -324,10 +324,10 @@ class SettingsController extends Controller {
                 'showHome' => false,
                 'desktopFolder' => '',
                 'trashNoConfirm' => false,
-                'decoration' => DecorationService::STANDARD,
+                'decoration' => DecorationService::DEFAULT_STYLE,
                 'decorationColor' => DecorationService::FOLLOW_NEXTCLOUD,
                 'iconDecorationLinked' => true,
-                'iconDecoration' => DecorationService::STANDARD,
+                'iconDecoration' => DecorationService::DEFAULT_STYLE,
                 'iconColor' => DecorationService::FOLLOW_NEXTCLOUD,
                 'windowControlsSide' => 'right',
                 'shellMode' => 'taskbar',
@@ -399,9 +399,9 @@ class SettingsController extends Controller {
         if ($decoration !== null) {
             $selected = in_array($decoration, [DecorationService::STANDARD, DecorationService::REDMOND, DecorationService::RETRO, DecorationService::MACOS], true)
                 ? $decoration
-                : DecorationService::STANDARD;
+                : DecorationService::DEFAULT_STYLE;
             if (!$this->decorationService->userSelectionEnabled()) {
-                $selected = DecorationService::STANDARD;
+                $selected = DecorationService::DEFAULT_STYLE;
             }
             $this->config->setUserValue($uid, self::APP_ID, self::DECORATION_KEY, $selected);
             $result['decoration'] = $selected;
