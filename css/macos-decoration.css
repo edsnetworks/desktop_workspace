@@ -430,3 +430,24 @@ body.has-macos-menubar #macos-menubar {
 /* Windows and the stage must clear the bar */
 body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-window.is-maximized { inset: 36px 12px 12px !important; }
 body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-favorites { top: 36px; }
+
+/* Menu bar: application menu */
+#macos-menubar .mb-app { all: unset; font-weight: 700; margin-left: 8px; padding: 0 8px; height: 22px; line-height: 22px; border-radius: 5px; cursor: default; max-width: 40vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#macos-menubar .mb-app:hover, #macos-menubar .mb-app:focus-visible { background: var(--mac-hover, rgba(0,0,0,.08)); }
+#macos-menubar .mb-menu {
+    position: fixed; top: 30px; min-width: 190px; padding: 5px; z-index: 100004;
+    background: var(--mac-glass-strong, rgba(246,246,248,.94)); color: var(--mac-ink, #111);
+    -webkit-backdrop-filter: blur(28px) saturate(180%); backdrop-filter: blur(28px) saturate(180%);
+    border: .5px solid var(--mac-hairline, rgba(0,0,0,.14)); border-radius: 10px;
+    box-shadow: var(--mac-shadow, 0 12px 40px rgba(0,0,0,.3));
+    animation: macos-menu-in .14s cubic-bezier(.2,.9,.3,1.1);
+}
+#macos-menubar .mb-menu[hidden] { display: none; }
+#macos-menubar .mb-menu button { all: unset; display: block; box-sizing: border-box; width: 100%; padding: 4px 10px; border-radius: 5px; font: 13px/1.5 var(--mac-font, system-ui); cursor: default; }
+#macos-menubar .mb-menu button:hover, #macos-menubar .mb-menu button:focus-visible { background: var(--mac-accent, #0a64ff); color: #fff; }
+
+/* No duplicate clock: the menu bar already shows date and time */
+body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-taskbar .desktop-clock { display: none; }
+/* Keep the app credit visible, but out from under the dock */
+body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-wallpaper-credit,
+body.has-macos-menubar #desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-wallpaper-credit { top: 36px; bottom: auto; right: 14px; opacity: .7; }
