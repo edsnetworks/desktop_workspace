@@ -478,3 +478,6 @@ body.has-macos-menubar #desktop-root[data-decoration="macos"][data-shell-mode="d
 #desktop-root[data-decoration="macos"] .mb-tab:hover .mb-tab-close, #desktop-root[data-decoration="macos"] .mb-tab.is-active .mb-tab-close { opacity: 1; }
 #desktop-root[data-decoration="macos"] .mb-tab-close:hover, #desktop-root[data-decoration="macos"] .mb-tab-add:hover { background: var(--mac-hover); color: var(--mac-ink); }
 #desktop-root[data-decoration="macos"] .mb-tab-add { margin: 0 0 4px 4px; }
+
+/* Nasconde la scritta (credito/versione) in basso a destra */
+.desktop-wallpaper-credit { display: none !important; }
