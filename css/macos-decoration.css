@@ -451,3 +451,30 @@ body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-taskbar .
 /* Keep the app credit visible, but out from under the dock */
 body.has-macos-menubar #desktop-root[data-decoration="macos"] .desktop-wallpaper-credit,
 body.has-macos-menubar #desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-wallpaper-credit { top: 36px; bottom: auto; right: 14px; opacity: .7; }
+
+/* File menu + disabled items */
+#macos-menubar .mb-file { all: unset; font-weight: 500; padding: 0 8px; height: 22px; line-height: 22px; border-radius: 5px; cursor: default; }
+#macos-menubar .mb-file:hover, #macos-menubar .mb-file:focus-visible { background: var(--mac-hover, rgba(0,0,0,.08)); }
+#macos-menubar .mb-menu button.is-disabled { opacity: .4; pointer-events: none; }
+
+/* Tabs inside Files windows */
+#desktop-root[data-decoration="macos"] .desktop-window.has-mb-tabs .desktop-window-body { height: calc(100% - 70px); }
+#desktop-root[data-decoration="macos"] .mb-tabs {
+    display: flex; align-items: flex-end; gap: 2px; height: 30px; padding: 4px 8px 0; box-sizing: border-box;
+    background: var(--mac-glass-strong); border-bottom: 1px solid var(--mac-hairline);
+    font: 12px/1 var(--mac-font, system-ui); color: var(--mac-ink);
+}
+#desktop-root[data-decoration="macos"] .mb-tabs[hidden] { display: none; }
+#desktop-root[data-decoration="macos"] .mb-tab {
+    display: flex; align-items: center; gap: 6px; flex: 0 1 200px; min-width: 70px; height: 26px; padding: 0 8px;
+    border-radius: 7px 7px 0 0; cursor: default; background: transparent; box-sizing: border-box;
+}
+#desktop-root[data-decoration="macos"] .mb-tab:hover { background: var(--mac-hover); }
+#desktop-root[data-decoration="macos"] .mb-tab.is-active { background: var(--color-main-background, #fff); box-shadow: 0 0 0 .5px var(--mac-hairline); font-weight: 600; }
+#desktop-root[data-decoration="macos"] .mb-tab-label { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+#desktop-root[data-decoration="macos"] .mb-tab-close,
+#desktop-root[data-decoration="macos"] .mb-tab-add { all: unset; display: grid; place-items: center; width: 18px; height: 18px; border-radius: 4px; font-size: 14px; line-height: 1; cursor: default; color: var(--mac-ink-2); }
+#desktop-root[data-decoration="macos"] .mb-tab-close { opacity: 0; }
+#desktop-root[data-decoration="macos"] .mb-tab:hover .mb-tab-close, #desktop-root[data-decoration="macos"] .mb-tab.is-active .mb-tab-close { opacity: 1; }
+#desktop-root[data-decoration="macos"] .mb-tab-close:hover, #desktop-root[data-decoration="macos"] .mb-tab-add:hover { background: var(--mac-hover); color: var(--mac-ink); }
+#desktop-root[data-decoration="macos"] .mb-tab-add { margin: 0 0 4px 4px; }
