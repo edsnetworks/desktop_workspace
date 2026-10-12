@@ -496,6 +496,7 @@ body:has(#desktop-root[data-decoration="macos"]) {
     --lg-edge: rgba(255, 255, 255, .42);
     --lg-chip: rgba(255, 255, 255, .26);
     --lg-chip-hover: rgba(255, 255, 255, .42);
+    --lg-tint: rgba(255, 255, 255, .16);
 }
 #desktop-root[data-decoration="macos"]:not(.desktop-decoration-light),
 body:has(#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light)) {
@@ -506,6 +507,7 @@ body:has(#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light)) 
     --lg-edge: rgba(255, 255, 255, .22);
     --lg-chip: rgba(255, 255, 255, .12);
     --lg-chip-hover: rgba(255, 255, 255, .22);
+    --lg-tint: rgba(30, 30, 40, .26);
 }
 
 /* --- Dock --- */
@@ -546,11 +548,13 @@ body:has(#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light)) 
 
 /* --- Launcher --- */
 body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu {
-    background: var(--lg-fill), var(--mac-glass) !important;
+    background: var(--lg-fill), var(--lg-tint) !important;
     -webkit-backdrop-filter: var(--lg-blur) !important;
     backdrop-filter: var(--lg-blur) !important;
     border: 1px solid var(--lg-edge) !important;
     border-radius: 30px !important;
+    -webkit-backdrop-filter: blur(34px) saturate(200%) brightness(1.04) contrast(1.02) !important;
+    backdrop-filter: blur(34px) saturate(200%) brightness(1.04) contrast(1.02) !important;
     box-shadow: var(--lg-rim), var(--lg-drop) !important;
     isolation: isolate;
     overflow: hidden;
@@ -608,4 +612,10 @@ body:has(#desktop-root[data-decoration="macos"]) .macos-launcher-empty:not([hidd
         -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
         background: var(--mac-glass-strong) !important;
     }
+}
+
+/* leggibilita' del testo sul vetro chiaro */
+body:has(#desktop-root[data-decoration="macos"].desktop-decoration-light) .desktop-start-menu .desktop-start-header strong,
+body:has(#desktop-root[data-decoration="macos"].desktop-decoration-light) .desktop-start-menu .desktop-app-tile {
+    text-shadow: 0 1px 8px rgba(255, 255, 255, .55);
 }
