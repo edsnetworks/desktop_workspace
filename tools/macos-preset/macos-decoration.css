@@ -619,3 +619,59 @@ body:has(#desktop-root[data-decoration="macos"].desktop-decoration-light) .deskt
 body:has(#desktop-root[data-decoration="macos"].desktop-decoration-light) .desktop-start-menu .desktop-app-tile {
     text-shadow: 0 1px 8px rgba(255, 255, 255, .55);
 }
+
+/* =====================================================================
+ * Liquid Glass: menu del profilo, notifiche, assistente e menu contestuali
+ * (stesso trattamento del dock e del launcher)
+ * ===================================================================== */
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu {
+    background: var(--lg-fill), var(--lg-tint) !important;
+    -webkit-backdrop-filter: var(--lg-blur) !important;
+    backdrop-filter: var(--lg-blur) !important;
+    border: 1px solid var(--lg-edge) !important;
+    border-radius: 22px !important;
+    box-shadow: var(--lg-rim), var(--lg-drop) !important;
+    color: var(--mac-ink) !important;
+    font-family: var(--mac-font);
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu { border-radius: 16px !important; }
+/* contenuto trasparente: il vetro e' quello del contenitore */
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper .header-menu__content,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper > div,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper ul,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper li {
+    background: transparent !important;
+    color: inherit !important;
+}
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper a,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper button {
+    color: inherit !important;
+    border-radius: 14px !important;
+    transition: background .16s ease, box-shadow .16s ease;
+}
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper a:hover,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper a:focus-visible,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper button:hover,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper button:focus-visible,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper li:hover > a {
+    background: var(--lg-chip-hover) !important;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, .55) !important;
+    outline: none !important;
+}
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper hr,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper [role="separator"] {
+    border-color: rgba(255, 255, 255, .28) !important; background: rgba(255, 255, 255, .28) !important;
+}
+body:has(#desktop-root[data-decoration="macos"].desktop-decoration-light) .header-menu__wrapper {
+    text-shadow: 0 1px 8px rgba(255, 255, 255, .5);
+}
+@media (prefers-reduced-transparency: reduce) {
+    body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper,
+    body:has(#desktop-root[data-decoration="macos"]) .desktop-task-context-menu,
+    body:has(#desktop-root[data-decoration="macos"]) .desktop-fav-menu {
+        -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--mac-glass-strong) !important;
+    }
+}
