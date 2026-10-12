@@ -231,5 +231,56 @@
         setInterval(tick, 15000);
         sync();
     }
+
+    /* Ricerca app nel launcher: filtra le tile mentre si digita (il pulsante originale apriva
+     * solo la ricerca unificata di Nextcloud, che qui non e' sempre disponibile). */
+    function initLauncherSearch() {
+        const menu = document.getElementById('desktop-start-menu');
+        const launcher = document.getElementById('desktop-launcher');
+        const btn = document.getElementById('desktop-unified-search');
+        if (!menu || !launcher || !btn || document.getElementById('macos-launcher-search')) return;
+        const it = /^it/i.test(document.documentElement.lang || navigator.language || '');
+        const input = document.createElement('input');
+        input.id = 'macos-launcher-search';
+        input.type = 'search';
+        input.autocomplete = 'off';
+        input.spellcheck = false;
+        input.placeholder = it ? 'Cerca' : 'Search';
+        input.setAttribute('aria-label', input.placeholder);
+        btn.parentNode.insertBefore(input, btn);
+        const empty = document.createElement('p');
+        empty.className = 'macos-launcher-empty';
+        empty.textContent = it ? 'Nessuna app trovata' : 'No apps found';
+        empty.hidden = true;
+        launcher.parentNode.insertBefore(empty, launcher.nextSibling);
+        const norm = (v) => String(v || '').toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '');
+        function apply() {
+            const q = norm(input.value.trim());
+            let shown = 0;
+            launcher.querySelectorAll('.desktop-app-tile').forEach((tile) => {
+                const text = norm(tile.textContent + ' ' + (tile.getAttribute('title') || '') + ' ' + (tile.getAttribute('aria-label') || ''));
+                const hit = !q || text.includes(q);
+                tile.style.display = hit ? '' : 'none';
+                if (hit) shown++;
+            });
+            empty.hidden = !(q && shown === 0);
+        }
+        input.addEventListener('input', apply);
+        input.addEventListener('keydown', (e) => {
+            e.stopPropagation();
+            if (e.key === 'Enter') {
+                const first = Array.from(launcher.querySelectorAll('.desktop-app-tile')).find((t) => t.style.display !== 'none');
+                if (first) { e.preventDefault(); first.click(); }
+            } else if (e.key === 'Escape' && input.value) {
+                e.preventDefault(); input.value = ''; apply();
+            }
+        });
+        new MutationObserver(apply).observe(launcher, { childList: true });
+        new MutationObserver(() => {
+            if (menu.hidden) { input.value = ''; apply(); } else setTimeout(() => input.focus(), 30);
+        }).observe(menu, { attributes: true, attributeFilter: ['hidden'] });
+        apply();
+    }
+    if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', initLauncherSearch); else initLauncherSearch();
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init); else init();
 })();

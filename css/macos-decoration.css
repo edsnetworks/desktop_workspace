@@ -481,3 +481,131 @@ body.has-macos-menubar #desktop-root[data-decoration="macos"][data-shell-mode="d
 
 /* Nasconde la scritta (credito/versione) in basso a destra */
 .desktop-wallpaper-credit { display: none !important; }
+
+/* =====================================================================
+ * Liquid Glass: dock + launcher (Apps menu) + campo di ricerca
+ * Vetro traslucido con forte sfocatura/saturazione, bordo rifrangente
+ * (luce speculare in alto, riflesso in basso) e ombre morbide.
+ * ===================================================================== */
+#desktop-root[data-decoration="macos"],
+body:has(#desktop-root[data-decoration="macos"]) {
+    --lg-fill: linear-gradient(145deg, rgba(255, 255, 255, .46) 0%, rgba(255, 255, 255, .14) 38%, rgba(255, 255, 255, .08) 62%, rgba(255, 255, 255, .26) 100%);
+    --lg-blur: blur(26px) saturate(190%) brightness(1.07) contrast(1.03);
+    --lg-rim: inset 0 1.5px 1px rgba(255, 255, 255, .85), inset 0 -1.5px 1px rgba(255, 255, 255, .28), inset 1px 0 1px rgba(255, 255, 255, .35), inset -1px 0 1px rgba(255, 255, 255, .22), inset 0 0 22px rgba(255, 255, 255, .16);
+    --lg-drop: 0 14px 36px rgba(20, 20, 60, .26), 0 3px 8px rgba(20, 20, 60, .14);
+    --lg-edge: rgba(255, 255, 255, .42);
+    --lg-chip: rgba(255, 255, 255, .26);
+    --lg-chip-hover: rgba(255, 255, 255, .42);
+}
+#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light),
+body:has(#desktop-root[data-decoration="macos"]:not(.desktop-decoration-light)) {
+    --lg-fill: linear-gradient(145deg, rgba(255, 255, 255, .22) 0%, rgba(255, 255, 255, .06) 40%, rgba(255, 255, 255, .03) 62%, rgba(255, 255, 255, .13) 100%);
+    --lg-blur: blur(28px) saturate(170%) brightness(.92) contrast(1.05);
+    --lg-rim: inset 0 1.5px 1px rgba(255, 255, 255, .5), inset 0 -1.5px 1px rgba(255, 255, 255, .14), inset 1px 0 1px rgba(255, 255, 255, .2), inset -1px 0 1px rgba(255, 255, 255, .12), inset 0 0 22px rgba(255, 255, 255, .06);
+    --lg-drop: 0 16px 40px rgba(0, 0, 0, .5), 0 3px 10px rgba(0, 0, 0, .3);
+    --lg-edge: rgba(255, 255, 255, .22);
+    --lg-chip: rgba(255, 255, 255, .12);
+    --lg-chip-hover: rgba(255, 255, 255, .22);
+}
+
+/* --- Dock --- */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-taskbar {
+    background: var(--lg-fill), var(--mac-dock-glass) !important;
+    -webkit-backdrop-filter: var(--lg-blur) !important;
+    backdrop-filter: var(--lg-blur) !important;
+    border: 1px solid var(--lg-edge) !important;
+    border-radius: 28px;
+    box-shadow: var(--lg-rim), var(--lg-drop) !important;
+    isolation: isolate;
+}
+/* riflesso speculare curvo sulla meta' superiore */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-taskbar::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, .34), rgba(255, 255, 255, 0) 52%);
+    opacity: .6; pointer-events: none; z-index: -1;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-taskbar-divider {
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, .55), rgba(255, 255, 255, 0)) !important;
+    width: 1.5px;
+}
+/* capsule interna (assistente, notifiche, profilo) */
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-header-end-slot {
+    background: var(--lg-chip);
+    border-radius: 22px;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, .55), inset 0 -1px 1px rgba(255, 255, 255, .15);
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-start,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-fullscreen {
+    background: var(--lg-chip) !important;
+    border: 0 !important;
+    border-radius: 14px !important;
+    box-shadow: var(--lg-rim) !important;
+}
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-start:hover,
+#desktop-root[data-decoration="macos"][data-shell-mode="dock"] .taskbar-fullscreen:hover { background: var(--lg-chip-hover) !important; }
+
+/* --- Launcher --- */
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu {
+    background: var(--lg-fill), var(--mac-glass) !important;
+    -webkit-backdrop-filter: var(--lg-blur) !important;
+    backdrop-filter: var(--lg-blur) !important;
+    border: 1px solid var(--lg-edge) !important;
+    border-radius: 30px !important;
+    box-shadow: var(--lg-rim), var(--lg-drop) !important;
+    isolation: isolate;
+    overflow: hidden;
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, .3), rgba(255, 255, 255, 0) 45%);
+    opacity: .6; pointer-events: none; z-index: -1;
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-header {
+    border-bottom: 0;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, .0), rgba(255, 255, 255, 0));
+    box-shadow: 0 1px 0 rgba(255, 255, 255, .28);
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile:hover,
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile:focus-visible {
+    background: var(--lg-chip-hover) !important;
+    color: var(--mac-ink) !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, .6), 0 6px 18px rgba(0, 0, 0, .12) !important;
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile {
+    border-radius: 16px !important;
+    transition: background .18s ease, box-shadow .18s ease, transform .18s cubic-bezier(.2, .9, .3, 1.2);
+}
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu .desktop-app-tile:active { transform: scale(.95); }
+
+/* --- Ricerca nel launcher --- */
+#macos-launcher-search { display: none; }
+body:has(#desktop-root[data-decoration="macos"]) #macos-launcher-search {
+    display: block; flex: 1 1 auto; min-width: 0; height: 34px; box-sizing: border-box;
+    padding: 0 14px 0 34px; margin: 0;
+    font: 14px/1 var(--mac-font); color: var(--mac-ink);
+    background:
+        url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2.4' stroke-linecap='round'><circle cx='10.5' cy='10.5' r='6.5'/><path d='M15.5 15.5L21 21'/></svg>") 11px 50% / 16px no-repeat,
+        var(--lg-chip);
+    border: 0; border-radius: 17px; outline: none;
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .14), inset 0 -1px 1px rgba(255, 255, 255, .4);
+    -webkit-appearance: none; appearance: none;
+    -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+}
+body:has(#desktop-root[data-decoration="macos"]) #macos-launcher-search::placeholder { color: var(--mac-ink-2); }
+body:has(#desktop-root[data-decoration="macos"]) #macos-launcher-search:focus {
+    box-shadow: inset 0 1px 2px rgba(0, 0, 0, .14), 0 0 0 3px rgba(10, 100, 255, .38);
+}
+body:has(#desktop-root[data-decoration="macos"]) #macos-launcher-search::-webkit-search-cancel-button { cursor: pointer; }
+body:has(#desktop-root[data-decoration="macos"]) .desktop-start-header #desktop-unified-search { display: none !important; }
+.macos-launcher-empty { display: none; }
+body:has(#desktop-root[data-decoration="macos"]) .macos-launcher-empty:not([hidden]) {
+    display: block; margin: 0; padding: 28px 12px; text-align: center; font: 13px var(--mac-font); color: var(--mac-ink-2);
+}
+@media (prefers-reduced-transparency: reduce) {
+    #desktop-root[data-decoration="macos"][data-shell-mode="dock"] .desktop-taskbar,
+    body:has(#desktop-root[data-decoration="macos"]) .desktop-start-menu {
+        -webkit-backdrop-filter: none !important; backdrop-filter: none !important;
+        background: var(--mac-glass-strong) !important;
+    }
+}
