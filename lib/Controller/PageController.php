@@ -141,6 +141,16 @@ class PageController extends Controller {
             'clockHourCycle' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::CLOCK_HOUR_CYCLE_KEY, '24') : '24',
             ...$this->decorationService->appearanceForUser($uid),
         ]);
+        // Added to the Home Screen (iPad, iPhone, Android), the desktop opens as an app without the browser's
+        // bars, so tapping cannot drop it out of full screen as the browser's own full-screen mode can.
+        foreach ([
+            ['apple-mobile-web-app-capable', 'yes'],
+            ['mobile-web-app-capable', 'yes'],
+            ['apple-mobile-web-app-status-bar-style', 'black-translucent'],
+            ['apple-mobile-web-app-title', 'Desktop'],
+        ] as [$name, $content]) {
+            \OCP\Util::addHeader('meta', ['name' => $name, 'content' => $content]);
+        }
         $csp = new ContentSecurityPolicy();
         $csp->addAllowedFrameDomain("'self'");
         $csp->addAllowedFrameDomain('https:');
