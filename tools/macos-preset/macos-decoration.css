@@ -675,3 +675,16 @@ body:has(#desktop-root[data-decoration="macos"].desktop-decoration-light) .heade
         -webkit-backdrop-filter: none !important; backdrop-filter: none !important; background: var(--mac-glass-strong) !important;
     }
 }
+
+/* Notifiche: una sola barra di scorrimento. Nextcloud mette overflow sia sul popover sia sul
+ * contenuto e sulla lista; qui scorre solo la lista (.notification-wrapper). */
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper:has(.notification-wrapper),
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper:has(.notification-wrapper) .header-menu__content,
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper:has(.notification-wrapper) .header-menu__content > div:not(.notification-wrapper) {
+    overflow: hidden !important;
+}
+body:has(#desktop-root[data-decoration="macos"]) .header-menu__wrapper .notification-wrapper {
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    scrollbar-width: thin;
+}
