@@ -427,9 +427,9 @@
     }
 
     function applyAppearance(settings = {}) {
-        if ('decoration' in settings) root.dataset.decoration = ['redmond', 'retro'].includes(settings.decoration) ? settings.decoration : 'standard';
+        if ('decoration' in settings) root.dataset.decoration = 'standard';
         if ('decorationColor' in settings) root.dataset.decorationColor = ['light', 'dark'].includes(settings.decorationColor) ? settings.decorationColor : 'nextcloud';
-        if ('iconDecoration' in settings) root.dataset.iconDecoration = ['redmond', 'retro'].includes(settings.iconDecoration) ? settings.iconDecoration : 'standard';
+        if ('iconDecoration' in settings) root.dataset.iconDecoration = 'standard';
         if ('iconDecorationLinked' in settings) root.dataset.iconDecorationLinked = settings.iconDecorationLinked ? 'true' : 'false';
         if (root.dataset.iconDecorationLinked === 'true') root.dataset.iconDecoration = root.dataset.decoration;
         if ('iconColor' in settings) root.dataset.iconColor = ['light', 'dark'].includes(settings.iconColor) ? settings.iconColor : 'nextcloud';

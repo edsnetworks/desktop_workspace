@@ -86,92 +86,6 @@ body[data-desktop-icon-decoration="standard"]:has(#desktop-root) .desktop-start-
     text-shadow: inherit !important;
 }
 
-#desktop-root[data-icon-decoration="redmond"] .desktop-pinned-app {
-    border: 1px solid rgba(255,255,255,.72) !important; border-radius: 4px !important;
-    background: linear-gradient(180deg, #6e9feb, #265bb4) !important;
-    box-shadow: inset 1px 1px rgba(255,255,255,.42), inset -1px -1px rgba(0,0,0,.3), 1px 2px 3px rgba(0,0,0,.36) !important;
-}
-#desktop-root[data-icon-decoration="redmond"] .desktop-pinned-app .desktop-app-menu-icon,
-#desktop-root[data-icon-decoration="redmond"] .desktop-app-shortcut-circle,
-#desktop-root[data-icon-decoration="redmond"] .desktop-fav-icon,
-body[data-desktop-icon-decoration="redmond"]:has(#desktop-root) .desktop-start-menu .desktop-app-menu-icon {
-    border: 1px solid rgba(255,255,255,.7) !important; border-radius: 4px !important;
-    background: linear-gradient(135deg, #77aaf3, #2453b8) !important;
-    box-shadow: inset 1px 1px rgba(255,255,255,.48), inset -1px -1px rgba(0,0,0,.28), 1px 2px 3px rgba(0,0,0,.34) !important;
-    clip-path: none !important;
-}
-#desktop-root[data-icon-decoration="redmond"] .desktop-fav {
-    border: 2px solid #1d5fd1 !important; border-radius: 7px 7px 2px 2px !important; color: #fff !important;
-    background: linear-gradient(180deg, #5f9df1, #1d5fd1 48%, #153d9c) !important;
-}
-#desktop-root[data-icon-decoration="redmond"] .desktop-fav:hover,
-#desktop-root[data-icon-decoration="redmond"] .desktop-fav:focus-visible {
-    border-color: #fff !important;
-    outline: 1px solid rgba(255,255,255,.78) !important;
-    outline-offset: 1px;
-    filter: brightness(1.1) !important;
-}
-#desktop-root[data-icon-decoration="redmond"] .desktop-fav.is-selected {
-    border-color: #fff !important;
-    outline: 3px solid #fff !important;
-    outline-offset: 2px;
-    background: linear-gradient(180deg, #8fc1ff, #397be0 45%, #123784) !important;
-    box-shadow: inset 0 0 0 2px #f4c542, 0 0 0 1px #123784, 0 4px 9px rgba(0,0,0,.46) !important;
-    filter: brightness(1.16) saturate(1.18) !important;
-}
-#desktop-root[data-icon-decoration="redmond"] .desktop-fav-label { color: #fff !important; text-shadow: 1px 1px 1px #10245e !important; }
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-pinned-app { background: linear-gradient(180deg, #68758f, #2b354c) !important; }
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-pinned-app .desktop-app-menu-icon,
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-app-shortcut-circle,
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-fav-icon,
-body[data-desktop-icon-decoration="redmond"]:has(#desktop-root):not(.desktop-icon-light) .desktop-start-menu .desktop-app-menu-icon { background: linear-gradient(135deg, #68758f, #2b354c) !important; }
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-fav { background: linear-gradient(180deg, #3d475b, #202b45 48%, #10182b) !important; border-color: #202b45 !important; }
-
-#desktop-root[data-icon-decoration="retro"] .desktop-pinned-app {
-    border: 1px solid #263234 !important; border-radius: 0 !important;
-    background: linear-gradient(180deg, #9a845e, #6d6049 52%, #41392c) !important;
-    box-shadow: inset 2px 2px rgba(218,235,226,.24), inset -2px -2px rgba(25,30,29,.28), 2px 3px 4px rgba(10,18,20,.4) !important;
-    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 0 100%) !important;
-}
-#desktop-root[data-icon-decoration="retro"] .desktop-pinned-app .desktop-app-menu-icon,
-#desktop-root[data-icon-decoration="retro"] .desktop-app-shortcut-circle,
-#desktop-root[data-icon-decoration="retro"] .desktop-fav-icon,
-body[data-desktop-icon-decoration="retro"]:has(#desktop-root) .desktop-start-menu .desktop-app-menu-icon {
-    border: 1px solid #263234 !important; border-radius: 0 !important;
-    background: linear-gradient(145deg, #1b9aa2, #07545a 58%, #032f33) !important;
-    box-shadow: inset 2px 2px rgba(113,232,232,.28), inset -2px -2px rgba(0,0,0,.38), 3px 4px 4px rgba(10,18,20,.42) !important;
-    clip-path: polygon(0 0, calc(100% - 7px) 0, 100% 7px, 100% 100%, 7px 100%, 0 calc(100% - 7px)) !important;
-}
-#desktop-root[data-icon-decoration="retro"] .desktop-fav {
-    border: 1px solid #263234 !important; border-radius: 0 !important; color: #161712 !important;
-    background: linear-gradient(164deg, rgba(218,235,226,.24), transparent 24%, rgba(25,30,29,.28)), linear-gradient(180deg, #c4a873, #5b4d35) !important;
-    clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px)) !important;
-}
-#desktop-root[data-icon-decoration="retro"] .desktop-fav:hover,
-#desktop-root[data-icon-decoration="retro"] .desktop-fav:focus-visible {
-    border-color: #e7d500 !important;
-    outline: 2px solid #e7d500 !important;
-    outline-offset: 2px;
-    filter: brightness(1.08) !important;
-}
-#desktop-root[data-icon-decoration="retro"] .desktop-fav.is-selected {
-    border-color: #e7d500 !important;
-    outline: 3px solid #e7d500 !important;
-    outline-offset: 2px;
-    background: linear-gradient(164deg, rgba(231,213,0,.42), rgba(185,169,0,.28) 48%, #41392c) !important;
-    box-shadow: inset 5px 0 #bd293c, inset 2px 2px rgba(218,235,226,.24), inset -2px -2px rgba(25,30,29,.28), 0 0 0 2px rgba(38,50,52,.82), 5px 6px 9px rgba(10,18,20,.4) !important;
-    filter: brightness(1.14) saturate(1.18) !important;
-}
-#desktop-root[data-icon-decoration="retro"] .desktop-fav-label { color: #161712 !important; text-shadow: 0 1px rgba(218,235,226,.24) !important; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-pinned-app { background: linear-gradient(180deg, #202a2b, #11191b) !important; border-color: #3b6667 !important; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-pinned-app .desktop-app-menu-icon,
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-app-shortcut-circle,
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-fav-icon,
-body[data-desktop-icon-decoration="retro"]:has(#desktop-root):not(.desktop-icon-light) .desktop-start-menu .desktop-app-menu-icon { background: linear-gradient(145deg, #27c4c8, #0b7177 58%, #042f33) !important; border-color: #3b6667 !important; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-fav { color: #c8ded9 !important; background: linear-gradient(164deg, rgba(126,174,168,.16), transparent 24%, rgba(0,0,0,.5)), linear-gradient(180deg, #202a2b, #090e10) !important; border-color: #3b6667 !important; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-fav-label { color: #c8ded9 !important; text-shadow: 0 1px #000 !important; }
-
-
 /* Standard chrome can also be pinned independently of the Nextcloud appearance. */
 #desktop-root[data-decoration="standard"][data-decoration-color="light"] {
     --desktop-panel-background: rgba(255,255,255,.82); --desktop-panel-text: #1f2937; --desktop-panel-muted: #4b5563;
@@ -187,7 +101,6 @@ body:has(#desktop-root[data-decoration="standard"][data-decoration-color="light"
 body:has(#desktop-root[data-decoration="standard"][data-decoration-color="dark"]) .desktop-start-menu,
 body:has(#desktop-root[data-decoration="standard"][data-decoration-color="dark"]) .desktop-task-context-menu,
 body:has(#desktop-root[data-decoration="standard"][data-decoration-color="dark"]) .desktop-fav-menu { color: #f3f4f6 !important; background: rgba(24,28,36,.95) !important; }
-
 
 #desktop-root[data-decoration="standard"][data-decoration-color="light"] .desktop-window,
 #desktop-root[data-decoration="standard"][data-decoration-color="light"] .desktop-window-titlebar,
@@ -209,7 +122,6 @@ body:has(#desktop-root[data-decoration="standard"][data-decoration-color="dark"]
 #desktop-root[data-decoration="standard"][data-decoration-color="dark"] .taskbar-button:not(.taskbar-start) {
     color: #f3f4f6 !important; background: rgba(255,255,255,.1) !important; border-color: rgba(255,255,255,.2) !important;
 }
-
 
 /* Standard icon palettes resolve from the independent icon color mode, not Nextcloud variables. */
 #desktop-root[data-icon-decoration="standard"].desktop-icon-light .desktop-pinned-app .desktop-app-menu-icon,
@@ -239,7 +151,6 @@ body[data-desktop-icon-decoration="standard"]:has(#desktop-root):not(.desktop-ic
 #desktop-root[data-icon-decoration="standard"]:not(.desktop-icon-light) .desktop-fav-label,
 #desktop-root[data-icon-decoration="standard"]:not(.desktop-icon-light) .desktop-app-shortcut { color: #f3f4f6 !important; text-shadow: 0 1px 2px rgba(0,0,0,.65) !important; }
 
-
 /* Apps menu is mounted under body; mirror the live icon palette onto its labels too. */
 body[data-desktop-icon-decoration]:has(#desktop-root).desktop-icon-light .desktop-start-menu .desktop-app-menu-label {
     color: #1f2937 !important;
@@ -264,42 +175,8 @@ body[data-desktop-icon-decoration]:has(#desktop-root):not(.desktop-icon-light) .
 #desktop-root[data-icon-decoration="standard"]:not(.desktop-icon-light) .desktop-waffle i { background: #8fd0f0 !important; }
 #desktop-root[data-icon-decoration="standard"]:not(.desktop-icon-light) .desktop-header-end-slot button [role="img"] { color: #8fd0f0 !important; }
 
-#desktop-root[data-icon-decoration="redmond"] .desktop-task-icon,
-#desktop-root[data-icon-decoration="redmond"] .desktop-nextcloud-logo .logo {
-    box-sizing: border-box; padding: 2px; border: 1px solid #193b73 !important; border-radius: 4px !important;
-    background-color: #3d78c5; box-shadow: inset 1px 1px rgba(255,255,255,.7), inset -1px -1px rgba(0,0,0,.28) !important;
-}
-#desktop-root[data-icon-decoration="redmond"] .desktop-task-icon img { width: 100% !important; height: 100% !important; object-fit: contain; }
-#desktop-root[data-icon-decoration="redmond"] .desktop-waffle i { border-radius: 1px !important; background: #245ba6 !important; box-shadow: 1px 1px #fff !important; }
-#desktop-root[data-icon-decoration="redmond"] .desktop-header-end-slot button [role="img"] { color: #245ba6 !important; filter: drop-shadow(1px 1px rgba(255,255,255,.72)) !important; }
-#desktop-root[data-icon-decoration="standard"] .taskbar-fullscreen,
-#desktop-root[data-icon-decoration="redmond"] .taskbar-fullscreen,
-#desktop-root[data-icon-decoration="retro"] .taskbar-fullscreen { position: relative; color: transparent !important; border-color: var(--desktop-panel-border) !important; text-shadow: none !important; }
-#desktop-root[data-icon-decoration="standard"] .taskbar-fullscreen::after,
-#desktop-root[data-icon-decoration="redmond"] .taskbar-fullscreen::after,
-#desktop-root[data-icon-decoration="retro"] .taskbar-fullscreen::after { content: "⛶"; position: absolute; inset: 0; display: grid; place-items: center; font-weight: 900; }
+#desktop-root[data-icon-decoration="standard"] .taskbar-fullscreen { position: relative; color: transparent !important; border-color: var(--desktop-panel-border) !important; text-shadow: none !important; }
+#desktop-root[data-icon-decoration="standard"] .taskbar-fullscreen::after { content: "⛶"; position: absolute; inset: 0; display: grid; place-items: center; font-weight: 900; }
 #desktop-root[data-icon-decoration="standard"] .taskbar-fullscreen::after { color: #00679e; }
 #desktop-root[data-icon-decoration="standard"]:not(.desktop-icon-light) .taskbar-fullscreen::after { color: #8fd0f0; }
-#desktop-root[data-icon-decoration="redmond"] .taskbar-fullscreen::after { color: #245ba6; font-family: "Segoe UI", sans-serif; text-shadow: 1px 1px rgba(255,255,255,.72); }
 
-#desktop-root[data-icon-decoration="retro"] .desktop-task-icon,
-#desktop-root[data-icon-decoration="retro"] .desktop-nextcloud-logo .logo {
-    box-sizing: border-box; padding: 2px; border: 1px solid #263234 !important; border-radius: 0 !important; background-color: #07545a;
-    box-shadow: inset 2px 2px rgba(113,232,232,.28), inset -2px -2px rgba(0,0,0,.38), 2px 2px rgba(10,18,20,.35) !important;
-    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px)) !important;
-}
-#desktop-root[data-icon-decoration="retro"] .desktop-task-icon img { width: 100% !important; height: 100% !important; object-fit: contain; }
-#desktop-root[data-icon-decoration="retro"] .desktop-waffle i { border-radius: 0 !important; background: #087b82 !important; box-shadow: 1px 1px #263234 !important; }
-#desktop-root[data-icon-decoration="retro"] .taskbar-fullscreen::after { color: #087b82; font-family: ui-monospace, "Cascadia Mono", monospace; text-shadow: 1px 1px #263234; }
-#desktop-root[data-icon-decoration="retro"] .desktop-header-end-slot button [role="img"] { color: #087b82 !important; filter: drop-shadow(1px 1px #263234) !important; }
-
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-task-icon,
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-nextcloud-logo .logo { background-color: #243754; border-color: #6b87b6 !important; }
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-waffle i,
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .desktop-header-end-slot button [role="img"] { color: #9dbcf2 !important; }
-#desktop-root[data-icon-decoration="redmond"]:not(.desktop-icon-light) .taskbar-fullscreen::after { color: #9dbcf2; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-task-icon,
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-nextcloud-logo .logo { background-color: #042f33; border-color: #3b6667 !important; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-waffle i,
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .desktop-header-end-slot button [role="img"] { color: #27c4c8 !important; }
-#desktop-root[data-icon-decoration="retro"]:not(.desktop-icon-light) .taskbar-fullscreen::after { color: #27c4c8; }

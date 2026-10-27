@@ -20,10 +20,10 @@
                 s[map[k]] = k === 'clock_hour_cycle' ? (v === '12' ? '12' : '24') : (v === 'yes');
             });
             if ('desktop_folder' in fields) s.desktopFolder = fields.desktop_folder;
-            if ('decoration' in fields) s.decoration = ['redmond', 'retro'].includes(fields.decoration) ? fields.decoration : 'standard';
+            if ('decoration' in fields) s.decoration = 'standard';
             if ('decoration_color' in fields) s.decorationColor = ['light', 'dark'].includes(fields.decoration_color) ? fields.decoration_color : 'nextcloud';
             if ('icon_decoration_linked' in fields) s.iconDecorationLinked = fields.icon_decoration_linked === 'yes';
-            if ('icon_decoration' in fields) s.iconDecoration = ['redmond', 'retro'].includes(fields.icon_decoration) ? fields.icon_decoration : 'standard';
+            if ('icon_decoration' in fields) s.iconDecoration = 'standard';
             if ('icon_color' in fields) s.iconColor = ['light', 'dark'].includes(fields.icon_color) ? fields.icon_color : 'nextcloud';
             if ('window_controls_side' in fields) s.windowControlsSide = fields.window_controls_side === 'left' ? 'left' : 'right';
             if ('shell_mode' in fields) s.shellMode = fields.shell_mode === 'dock' ? 'dock' : 'taskbar';

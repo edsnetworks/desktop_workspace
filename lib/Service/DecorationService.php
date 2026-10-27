@@ -9,8 +9,6 @@ use OCP\IConfig;
 
 class DecorationService {
     public const STANDARD = 'standard';
-    public const REDMOND = 'redmond';
-    public const RETRO = 'retro';
     public const FOLLOW_NEXTCLOUD = 'nextcloud';
     public const LIGHT = 'light';
     public const DARK = 'dark';
@@ -37,7 +35,7 @@ class DecorationService {
     }
 
     public function validatedDecoration(string $value): string {
-        return in_array($value, [self::STANDARD, self::REDMOND, self::RETRO], true) ? $value : self::STANDARD;
+        return self::STANDARD; // macOS is the only decoration style
     }
 
     public function validatedColorMode(string $value, string $fallback): string {

@@ -3,6 +3,12 @@
 All notable changes to the Desktop app are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
+## 0.19.0 – 2026-10-27
+
+### Changed
+- The Redmond and Retro decoration styles have been removed. The former Standard style is now the only one and is named macOS.
+- New users start with the Dock and the window controls on the left. Saved personal choices are kept.
+
 ## 0.18.5 – 2026-10-27
 
 ### Fixed

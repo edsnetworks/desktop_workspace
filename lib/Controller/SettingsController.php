@@ -331,8 +331,8 @@ class SettingsController extends Controller {
                 'iconDecorationLinked' => true,
                 'iconDecoration' => DecorationService::STANDARD,
                 'iconColor' => DecorationService::FOLLOW_NEXTCLOUD,
-                'windowControlsSide' => 'right',
-                'shellMode' => 'taskbar',
+                'windowControlsSide' => 'left',
+                'shellMode' => 'dock',
                 'dockAlwaysVisible' => true,
                 'clockHourCycle' => '24',
             ],
@@ -379,12 +379,12 @@ class SettingsController extends Controller {
         $truthy = static fn (string $v): bool => $v === 'yes' || $v === 'true' || $v === '1';
         $result = ['status' => 'ok'];
         if ($window_controls_side !== null) {
-            $value = $window_controls_side === 'left' ? 'left' : 'right';
+            $value = $window_controls_side === 'right' ? 'right' : 'left';
             $this->config->setUserValue($uid, self::APP_ID, self::WINDOW_CONTROLS_SIDE_KEY, $value);
             $result['windowControlsSide'] = $value;
         }
         if ($shell_mode !== null) {
-            $value = $shell_mode === 'dock' ? 'dock' : 'taskbar';
+            $value = $shell_mode === 'taskbar' ? 'taskbar' : 'dock';
             $this->config->setUserValue($uid, self::APP_ID, self::SHELL_MODE_KEY, $value);
             $result['shellMode'] = $value;
         }
@@ -399,9 +399,7 @@ class SettingsController extends Controller {
             $result['clockHourCycle'] = $value;
         }
         if ($decoration !== null) {
-            $selected = in_array($decoration, [DecorationService::STANDARD, DecorationService::REDMOND, DecorationService::RETRO], true)
-                ? $decoration
-                : DecorationService::STANDARD;
+            $selected = DecorationService::STANDARD;
             if (!$this->decorationService->userSelectionEnabled()) {
                 $selected = DecorationService::STANDARD;
             }

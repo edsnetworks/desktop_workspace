@@ -198,16 +198,6 @@
 #desktop-root[data-shell-mode="dock"] .desktop-pinned-app.is-minimized { opacity: .68; }
 
 /* Keep the three decoration families visually coherent in both new shell surfaces. */
-#desktop-root[data-decoration="redmond"][data-shell-mode="dock"] .desktop-taskbar,
-#desktop-root[data-decoration="redmond"][data-shell-mode="dock"] .desktop-topbar { border-radius: 2px; box-shadow: inset 1px 1px rgba(255,255,255,.45), inset -1px -1px rgba(0,0,0,.28), 0 10px 26px rgba(0,0,0,.3); }
-#desktop-root[data-decoration="redmond"][data-shell-mode="dock"] .desktop-pinned-app,
-#desktop-root[data-decoration="redmond"][data-shell-mode="dock"] .desktop-task-button,
-#desktop-root[data-decoration="redmond"][data-shell-mode="dock"] .taskbar-start { border-radius: 2px; }
-#desktop-root[data-decoration="retro"][data-shell-mode="dock"] .desktop-taskbar,
-#desktop-root[data-decoration="retro"][data-shell-mode="dock"] .desktop-topbar { border-radius: 0; border-width: 2px; border-color: var(--cbp-yellow, var(--desktop-panel-border)); box-shadow: 4px 4px 0 var(--cbp-shadow, rgba(0,0,0,.55)); }
-#desktop-root[data-decoration="retro"][data-shell-mode="dock"] .desktop-pinned-app,
-#desktop-root[data-decoration="retro"][data-shell-mode="dock"] .desktop-task-button,
-#desktop-root[data-decoration="retro"][data-shell-mode="dock"] .taskbar-start { border-radius: 0; }
 
 @media (max-width: 800px) {
     #desktop-root[data-shell-mode="dock"] .desktop-clock { font-size: 12px; }
