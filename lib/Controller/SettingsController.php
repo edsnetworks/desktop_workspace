@@ -4,6 +4,7 @@ namespace OCA\DesktopWorkspace\Controller;
 use OC\DB\Exceptions\DbalException;
 use OCA\DesktopWorkspace\Service\DecorationService;
 use OCA\DesktopWorkspace\Service\FilesAvailability;
+use OCA\DesktopWorkspace\Service\LazyUserValues;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\JSONResponse;
@@ -55,6 +56,7 @@ class SettingsController extends Controller {
         private IRootFolder $rootFolder,
         private IUserManager $userManager,
         private DecorationService $decorationService,
+        private LazyUserValues $lazyValues,
     ) {
         parent::__construct($appName, $request);
     }
@@ -134,7 +136,7 @@ class SettingsController extends Controller {
                 }
             }
         }
-        $this->config->setUserValue($user->getUID(), self::APP_ID, self::ICON_POSITIONS_KEY, json_encode($clean));
+        $this->lazyValues->set($user->getUID(), self::ICON_POSITIONS_KEY, json_encode($clean));
         return new JSONResponse(['status' => 'ok']);
     }
 
@@ -153,10 +155,10 @@ class SettingsController extends Controller {
     }
 
     private function storedAppPins(string $uid): array {
-        $decoded = json_decode($this->config->getUserValue($uid, self::APP_ID, self::APP_PINS_KEY, ''), true);
+        $decoded = json_decode($this->lazyValues->get($uid, self::APP_PINS_KEY, ''), true);
         $fallback = is_array($decoded) ? $decoded : [];
-        $taskbar = json_decode($this->config->getUserValue($uid, self::APP_ID, self::TASKBAR_PINS_KEY, 'null'), true);
-        $desktop = json_decode($this->config->getUserValue($uid, self::APP_ID, self::DESKTOP_PINS_KEY, 'null'), true);
+        $taskbar = json_decode($this->lazyValues->get($uid, self::TASKBAR_PINS_KEY, 'null'), true);
+        $desktop = json_decode($this->lazyValues->get($uid, self::DESKTOP_PINS_KEY, 'null'), true);
         return [
             'taskbar' => $this->cleanPinList($taskbar) ?? $this->cleanPinList($fallback['taskbar'] ?? []) ?? [],
             'desktop' => $this->cleanPinList($desktop) ?? $this->cleanPinList($fallback['desktop'] ?? []) ?? [],
@@ -177,7 +179,7 @@ class SettingsController extends Controller {
             return new JSONResponse(['status' => 'error', 'message' => 'invalid pins'], 400);
         }
         $key = $location === 'taskbar' ? self::TASKBAR_PINS_KEY : self::DESKTOP_PINS_KEY;
-        $this->config->setUserValue($user->getUID(), self::APP_ID, $key, json_encode($clean));
+        $this->lazyValues->set($user->getUID(), $key, json_encode($clean));
         return new JSONResponse(['status' => 'ok', 'pins' => $this->storedAppPins($user->getUID())]);
     }
 
@@ -222,12 +224,12 @@ class SettingsController extends Controller {
             if ($migrationState !== '' || !$this->claimBrowserStateMigration($uid)) {
                 return new JSONResponse(['status' => 'pending'], 409);
             }
-            $hasLegacyServerPins = $this->config->getUserValue($uid, self::APP_ID, self::APP_PINS_KEY, '') !== '';
-            if (!$hasLegacyServerPins && $this->config->getUserValue($uid, self::APP_ID, self::TASKBAR_PINS_KEY, '') === '') {
-                $this->config->setUserValue($uid, self::APP_ID, self::TASKBAR_PINS_KEY, json_encode($taskbar));
+            $hasLegacyServerPins = $this->lazyValues->get($uid, self::APP_PINS_KEY, '') !== '';
+            if (!$hasLegacyServerPins && $this->lazyValues->get($uid, self::TASKBAR_PINS_KEY, '') === '') {
+                $this->lazyValues->set($uid, self::TASKBAR_PINS_KEY, json_encode($taskbar));
             }
-            if (!$hasLegacyServerPins && $this->config->getUserValue($uid, self::APP_ID, self::DESKTOP_PINS_KEY, '') === '') {
-                $this->config->setUserValue($uid, self::APP_ID, self::DESKTOP_PINS_KEY, json_encode($desktop));
+            if (!$hasLegacyServerPins && $this->lazyValues->get($uid, self::DESKTOP_PINS_KEY, '') === '') {
+                $this->lazyValues->set($uid, self::DESKTOP_PINS_KEY, json_encode($desktop));
             }
             if ($this->config->getUserValue($uid, self::APP_ID, self::APPS_MENU_SIZE_KEY, '') === '') {
                 $this->config->setUserValue($uid, self::APP_ID, self::APPS_MENU_SIZE_KEY, json_encode([
@@ -265,7 +267,7 @@ class SettingsController extends Controller {
         if ($user === null) {
             return new JSONResponse(['status' => 'error', 'message' => 'no user'], 403);
         }
-        $this->config->deleteUserValue($user->getUID(), self::APP_ID, self::ICON_POSITIONS_KEY);
+        $this->lazyValues->delete($user->getUID(), self::ICON_POSITIONS_KEY);
         return new JSONResponse(['status' => 'ok']);
     }
 
@@ -283,7 +285,7 @@ class SettingsController extends Controller {
         }
         // Hard cap: never store more than 40 windows.
         $decoded['windows'] = array_slice($decoded['windows'], 0, 40);
-        $this->config->setUserValue($user->getUID(), self::APP_ID, self::WINDOW_STATES_KEY, json_encode($decoded));
+        $this->lazyValues->set($user->getUID(), self::WINDOW_STATES_KEY, json_encode($decoded));
         return new JSONResponse(['status' => 'ok']);
     }
 
@@ -293,7 +295,7 @@ class SettingsController extends Controller {
         if ($user === null) {
             return new JSONResponse(['status' => 'error', 'message' => 'no user'], 403);
         }
-        $this->config->deleteUserValue($user->getUID(), self::APP_ID, self::WINDOW_STATES_KEY);
+        $this->lazyValues->delete($user->getUID(), self::WINDOW_STATES_KEY);
         return new JSONResponse(['status' => 'ok']);
     }
 

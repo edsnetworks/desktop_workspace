@@ -3,6 +3,7 @@ namespace OCA\DesktopWorkspace\Controller;
 
 use OCA\DesktopWorkspace\Service\DecorationService;
 use OCA\DesktopWorkspace\Service\FilesAvailability;
+use OCA\DesktopWorkspace\Service\LazyUserValues;
 use OCP\AppFramework\Controller;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
@@ -26,6 +27,7 @@ class PageController extends Controller {
         private FilesAvailability $filesAvailability,
         private \OCA\DesktopWorkspace\Service\StatsService $statsService,
         private DecorationService $decorationService,
+        private LazyUserValues $lazyValues,
     ) {
         parent::__construct($appName, $request);
     }
@@ -98,9 +100,9 @@ class PageController extends Controller {
 
         $appPins = '';
         if ($uid !== null) {
-            $fallbackPins = json_decode($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::APP_PINS_KEY, ''), true);
-            $taskbarPins = json_decode($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::TASKBAR_PINS_KEY, 'null'), true);
-            $desktopPins = json_decode($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::DESKTOP_PINS_KEY, 'null'), true);
+            $fallbackPins = json_decode($this->lazyValues->get($uid, SettingsController::APP_PINS_KEY, ''), true);
+            $taskbarPins = json_decode($this->lazyValues->get($uid, SettingsController::TASKBAR_PINS_KEY, 'null'), true);
+            $desktopPins = json_decode($this->lazyValues->get($uid, SettingsController::DESKTOP_PINS_KEY, 'null'), true);
             if (is_array($taskbarPins) || is_array($desktopPins) || is_array($fallbackPins)) {
                 $appPins = json_encode([
                     'taskbar' => is_array($taskbarPins) ? $taskbarPins : ($fallbackPins['taskbar'] ?? []),
@@ -119,7 +121,7 @@ class PageController extends Controller {
             'filesUrl' => $this->urlGenerator->linkToRoute('files.view.index'),
             'showFilesNewTab' => $this->config->getAppValue(SettingsController::APP_ID, SettingsController::SHOW_FILES_NEW_TAB_KEY, 'yes') !== 'no',
             'personalSaveUrl' => $this->urlGenerator->linkToRoute('desktop_workspace.settings.savePersonalSettings'),
-            'iconPositions' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::ICON_POSITIONS_KEY, '{}') : '{}',
+            'iconPositions' => $uid !== null ? $this->lazyValues->get($uid, SettingsController::ICON_POSITIONS_KEY, '{}') : '{}',
             'iconSaveUrl' => $this->urlGenerator->linkToRoute('desktop_workspace.settings.saveIconPositions'),
             'appPins' => $appPins,
             'appPinsSaveUrl' => $this->urlGenerator->linkToRoute('desktop_workspace.settings.saveAppPins'),
@@ -127,7 +129,7 @@ class PageController extends Controller {
             'appsMenuSizeSaveUrl' => $this->urlGenerator->linkToRoute('desktop_workspace.settings.saveAppsMenuSize'),
             'browserStateMigrated' => $uid !== null && $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::BROWSER_STATE_MIGRATION_KEY, '') === '1',
             'browserStateMigrationUrl' => $this->urlGenerator->linkToRoute('desktop_workspace.settings.migrateBrowserState'),
-            'windowStates' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::WINDOW_STATES_KEY, '{"windows":[]}') : '{"windows":[]}',
+            'windowStates' => $uid !== null ? $this->lazyValues->get($uid, SettingsController::WINDOW_STATES_KEY, '{"windows":[]}') : '{"windows":[]}',
             'windowSaveUrl' => $this->urlGenerator->linkToRoute('desktop_workspace.settings.saveWindowStates'),
             'showFavorites' => $uid !== null && $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::SHOW_FAVORITES_KEY, 'no') === 'yes',
             'favoritesNoConfirm' => $uid !== null && $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::FAV_NO_CONFIRM_KEY, 'no') === 'yes',
