@@ -8,6 +8,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/).
 ### Fixed
 - Stored the large per-user JSON values (window states, icon positions, taskbar/desktop/app pins) as lazy user config, which removes the repeated "desktop_workspace:window_states is larger than 128 bytes. It should be declared as lazy" deprecation entries from the Nextcloud log. Values saved by earlier versions are still read and become lazy the next time they are saved.
 
+## 0.19.2 – 2026-10-27
+
+### Fixed
+- The search button in the top bar did nothing on Nextcloud versions whose header no longer renders the unified search button. Desktop Workspace now opens its own search panel (files, mail, contacts, and every other Nextcloud search provider); results open in desktop windows. Esc closes it and the arrow keys and Enter select a result.
+
 ## 0.19.1 – 2026-10-27
 
 ### Added

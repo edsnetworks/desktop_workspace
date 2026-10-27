@@ -3,12 +3,14 @@
 script('desktop_workspace', 'desktop-drag-rules');
 script('desktop_workspace', 'native-files-drag');
 script('desktop_workspace', 'desktop-shell');
+script('desktop_workspace', 'search-overlay');
 script('desktop_workspace', 'macos-menubar');
 style('desktop_workspace', 'desktop');
 style('desktop_workspace', 'icon-appearance');
 style('desktop_workspace', 'selection-band');
 style('desktop_workspace', 'window-snap');
 style('desktop_workspace', 'shell-layout');
+style('desktop_workspace', 'search-overlay');
 style('desktop_workspace', 'macos-decoration');
 style('desktop_workspace', 'window-shell-fixes');
 style('desktop_workspace', 'motion-release');

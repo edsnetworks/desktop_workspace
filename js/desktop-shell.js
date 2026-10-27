@@ -828,6 +828,8 @@
         ];
         const trigger = selectors.map((sel) => document.querySelector(sel)).find((el) => el && !search?.contains(el));
         if (trigger) { trigger.click(); setTimeout(positionHeaderEndMenus, 0);  return; }
+        // No Nextcloud search button in the header (newer versions): use the built-in search panel.
+        if (window.DesktopWorkspaceSearch) window.DesktopWorkspaceSearch.open();
 
     }
     function renderLauncher() {

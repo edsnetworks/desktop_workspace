@@ -24,7 +24,9 @@
 
         const click = (sel) => { const el = document.querySelector(sel); if (el) el.click(); };
         bar.querySelector('.mb-logo').addEventListener('click', () => click('#desktop-start'));
-        bar.querySelector('.mb-search').addEventListener('click', () => click('#desktop-unified-search'));
+        bar.querySelector('.mb-search').addEventListener('click', () => {
+            if (window.DesktopWorkspaceSearch) window.DesktopWorkspaceSearch.open(); else click('#desktop-unified-search');
+        });
         bar.querySelector('.mb-full').addEventListener('click', () => click('#desktop-fullscreen'));
 
         const menuEl = bar.querySelector('.mb-menu');
