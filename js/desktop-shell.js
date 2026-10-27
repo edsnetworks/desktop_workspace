@@ -427,9 +427,9 @@
     }
 
     function applyAppearance(settings = {}) {
-        if ('decoration' in settings) root.dataset.decoration = 'standard';
+        if ('decoration' in settings) root.dataset.decoration = 'macos';
         if ('decorationColor' in settings) root.dataset.decorationColor = ['light', 'dark'].includes(settings.decorationColor) ? settings.decorationColor : 'nextcloud';
-        if ('iconDecoration' in settings) root.dataset.iconDecoration = 'standard';
+        if ('iconDecoration' in settings) root.dataset.iconDecoration = 'macos';
         if ('iconDecorationLinked' in settings) root.dataset.iconDecorationLinked = settings.iconDecorationLinked ? 'true' : 'false';
         if (root.dataset.iconDecorationLinked === 'true') root.dataset.iconDecoration = root.dataset.decoration;
         if ('iconColor' in settings) root.dataset.iconColor = ['light', 'dark'].includes(settings.iconColor) ? settings.iconColor : 'nextcloud';
@@ -1417,7 +1417,34 @@
         return true;
     }
 
+    // [macOS preset] Before opening a "file" window, ask the server whether the clicked item is
+    // really a folder (language-independent). Folders keep navigating inside the same window.
+    function dwDeferFolderCheck(row, button, sourceApp) {
+        if (row.__dwVerified) { row.__dwVerified = false; return false; }
+        const doc = row.ownerDocument;
+        const name = rowName(row, button);
+        const uid = (window.OC && OC.getCurrentUser && OC.getCurrentUser() || {}).uid || '';
+        if (!name || !uid) return false;
+        const path = joinFilesPath(currentFilesDir(doc), name);
+        const root = (window.OC && OC.getRootPath) ? OC.getRootPath() : '';
+        const url = `${root}/remote.php/dav/files/${encodeURIComponent(uid)}/` + path.split('/').filter(Boolean).map(encodeURIComponent).join('/');
+        fetch(url, {
+            method: 'PROPFIND', credentials: 'same-origin', headers: { Depth: '0' },
+            body: '<?xml version="1.0"?><d:propfind xmlns:d="DAV:"><d:prop><d:resourcetype/></d:prop></d:propfind>',
+        }).then((r) => r.text()).then((x) => /<(?:\w+:)?collection\b/.test(x)).catch(() => false).then((isFolder) => {
+            if (isFolder) {
+                doc.__dwSkip = true;
+                try { button.click(); } finally { doc.__dwSkip = false; }
+            } else {
+                row.__dwVerified = true;
+                openNativeFilesViewerWindow(row, button, sourceApp);
+            }
+        });
+        return true;
+    }
+
     function openNativeFilesViewerWindow(row, button, sourceApp = null) {
+        if (dwDeferFolderCheck(row, button, sourceApp)) return true;
         if (!row || !button) return false;
         const fileId = rowFileId(row);
         if (!fileId) return false;
@@ -1470,6 +1497,22 @@
         };
     }
 
+    // [macOS preset] Language-independent folder detection for Nextcloud Files rows.
+    // The stock check only knows the English title "Open folder", so in other languages a folder
+    // click was treated as a file and opened a second window.
+    function isFolderRowDeep(row, button) {
+        if (!row) return false;
+        if (row.classList.contains('files-list__row--folder')) return true;
+        const attrs = [row.getAttribute('data-cy-files-list-row-type'), row.dataset && row.dataset.type, row.dataset && row.dataset.mime, row.dataset && row.dataset.mimetype, row.getAttribute('data-type')];
+        if (attrs.some((v) => v && /^(folder|dir|directory|httpd\/unix-directory)$/i.test(v))) return true;
+        const title = (button && (button.getAttribute('title') || button.getAttribute('aria-label'))) || '';
+        if (/^open folder\b/i.test(title)) return true;
+        if (/^(apri|open|ouvrir|öffnen|abrir|abrir)\b.*\b(cartella|folder|dossier|ordner|carpeta|pasta)\b/i.test(title)) return true;
+        const icon = row.querySelector('.files-list__row-icon');
+        if (icon && icon.querySelector('[class*="folder"], img[src*="folder"], svg[class*="folder"]')) return true;
+        return false;
+    }
+
     function wireIframeNavigationInterception(doc, app) {
         if (!doc || doc.__desktopNavigationIntercept === true) return;
         doc.__desktopNavigationIntercept = true;
@@ -1480,13 +1523,14 @@
             return event.button === 1 || event.ctrlKey || event.metaKey || anchor.target === '_blank';
         };
         const onActivate = (event) => {
+            if (doc.__dwSkip) return;
             const button = event.target?.closest?.('.files-list__row-name-link');
             if (button) {
                 const label = normaliseActionLabel(button.getAttribute('title') || button.getAttribute('aria-label') || '');
                 const euroOfficeOwnsFiles = Boolean(doc.defaultView?.OCA?.Eurooffice?.setting)
                     && !doc.defaultView?._oc_appswebroots?.richdocuments;
                 const row = button.closest('.files-list__row');
-                const isFolderRow = row?.classList.contains('files-list__row--folder') || /^open folder\b/i.test(button.getAttribute('title') || button.getAttribute('aria-label') || '');
+                const isFolderRow = isFolderRowDeep(row, button);
                 if (isFolderRow && isNewWindowGesture(event)) {
                     if (openNativeFilesFolderWindow(row, button, app)) {
                         event.preventDefault();
@@ -3126,13 +3170,37 @@
             if (root.dataset.desktopfilesEnabled === 'true') {
                 const url = OC.generateUrl('/apps/desktop_workspace/files') + '?desktop=1&dir=' + encodeURIComponent(dir);
                 const icon = (OC.imagePath && OC.imagePath('desktop_workspace', 'files.svg')) || '/apps/desktop_workspace/img/files.svg';
-                openExternalWindow({ appId: `${idPrefix}-${Date.now()}`, title: t('Desktop Files'), subtitle: dir, href: url, icon });
+                openFilesWindowReuse({ appId: `${idPrefix}-${Date.now()}`, title: t('Desktop Files'), subtitle: dir, href: url, icon });
             } else {
                 const url = OC.generateUrl('/apps/files/') + '?dir=' + encodeURIComponent(dir);
                 const filesApp = launcherApps.find((app) => app.id === 'files' || /\/apps\/files(?:\/|$)/.test(app.href || ''));
                 const icon = filesApp?.icon || '/apps/files/img/app.svg';
-                openExternalWindow({ appId: `${idPrefix}-${Date.now()}`, title: t('Files'), subtitle: dir, href: url, icon });
+                openFilesWindowReuse({ appId: `${idPrefix}-${Date.now()}`, title: t('Files'), subtitle: dir, href: url, icon });
             }
+        }
+
+        // [macOS preset] Reuse one Files window instead of opening a new one for every folder.
+        function openFilesWindowReuse({ appId, title, subtitle = '', href, icon = '' }) {
+            const isFilesEntry = (entry) => {
+                const h = String(entry.app && entry.app.href || '');
+                return /\/apps\/(?:files|desktop_workspace\/files)(?:[\/?#]|$)/.test(h) && !/trashbin|\/files\/viewer/.test(h)
+                    && !!entry.window.querySelector('iframe.desktop-window-iframe');
+            };
+            let targetId = null;
+            for (const [id, entry] of windows) {
+                if (!isFilesEntry(entry)) continue;
+                targetId = id;
+                if (entry.window.classList.contains('is-focused')) break;
+            }
+            if (!targetId) { openExternalWindow({ appId, title, subtitle, href, icon }); return; }
+            const entry = windows.get(targetId);
+            const iframe = entry.window.querySelector('iframe.desktop-window-iframe');
+            const abs = new URL(href, window.location.origin).href;
+            try { iframe.contentWindow.location.replace(abs); } catch (e) { iframe.src = abs; }
+            entry.app.href = abs;
+            setWindowMinimized(targetId, false);
+            focusWindow(targetId);
+            setWindowMeta(targetId, { title, subtitle, icon });
         }
 
         function openFavorite(el) {

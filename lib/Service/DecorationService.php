@@ -9,6 +9,8 @@ use OCP\IConfig;
 
 class DecorationService {
     public const STANDARD = 'standard';
+    public const MACOS = 'macos';
+    public const DEFAULT_STYLE = 'macos';
     public const FOLLOW_NEXTCLOUD = 'nextcloud';
     public const LIGHT = 'light';
     public const DARK = 'dark';
@@ -29,13 +31,13 @@ class DecorationService {
             $uid,
             SettingsController::APP_ID,
             SettingsController::DECORATION_KEY,
-            self::STANDARD,
+            self::DEFAULT_STYLE,
         );
         return $this->validatedDecoration($saved);
     }
 
     public function validatedDecoration(string $value): string {
-        return self::STANDARD; // macOS is the only decoration style
+        return self::MACOS; // macOS is the only decoration style
     }
 
     public function validatedColorMode(string $value, string $fallback): string {
@@ -48,7 +50,7 @@ class DecorationService {
 
     public function appearanceForUser(?string $uid): array {
         if ($uid === null || !$this->userSelectionEnabled()) {
-            return ['decoration' => self::STANDARD, 'decorationColor' => self::FOLLOW_NEXTCLOUD, 'iconDecorationLinked' => true, 'iconDecoration' => self::STANDARD, 'iconColor' => self::FOLLOW_NEXTCLOUD];
+            return ['decoration' => self::DEFAULT_STYLE, 'decorationColor' => self::FOLLOW_NEXTCLOUD, 'iconDecorationLinked' => true, 'iconDecoration' => self::DEFAULT_STYLE, 'iconColor' => self::FOLLOW_NEXTCLOUD];
         }
         $decoration = $this->effectiveForUser($uid);
         $linked = $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::ICON_DECORATION_LINKED_KEY, 'yes') !== 'no';
@@ -56,14 +58,14 @@ class DecorationService {
             'decoration' => $decoration,
             'decorationColor' => $this->validatedColorMode($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::DECORATION_COLOR_KEY, self::FOLLOW_NEXTCLOUD), self::FOLLOW_NEXTCLOUD),
             'iconDecorationLinked' => $linked,
-            'iconDecoration' => $linked ? $decoration : $this->validatedDecoration($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::ICON_DECORATION_KEY, self::STANDARD)),
+            'iconDecoration' => $linked ? $decoration : $this->validatedDecoration($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::ICON_DECORATION_KEY, self::DEFAULT_STYLE)),
             'iconColor' => $linked ? $this->validatedColorMode($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::DECORATION_COLOR_KEY, self::FOLLOW_NEXTCLOUD), self::FOLLOW_NEXTCLOUD) : $this->validatedIconColorMode($this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::ICON_COLOR_KEY, self::FOLLOW_NEXTCLOUD)),
         ];
     }
 
     public function effectiveForUser(?string $uid): string {
         if ($uid === null || !$this->userSelectionEnabled()) {
-            return self::STANDARD;
+            return self::DEFAULT_STYLE;
         }
         return $this->savedForUser($uid);
     }

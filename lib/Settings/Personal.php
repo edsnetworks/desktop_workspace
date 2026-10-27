@@ -38,11 +38,11 @@ class Personal implements ISettings {
             'userDecorationsEnabled' => $this->decorationService->userSelectionEnabled(),
             ...$appearance,
             'windowControlsSide' => $user !== null
-                ? $this->config->getUserValue($user->getUID(), SettingsController::APP_ID, SettingsController::WINDOW_CONTROLS_SIDE_KEY, 'left')
-                : 'left',
+                ? $this->config->getUserValue($user->getUID(), SettingsController::APP_ID, SettingsController::WINDOW_CONTROLS_SIDE_KEY, 'right')
+                : 'right',
             'shellMode' => $user !== null
-                ? $this->config->getUserValue($user->getUID(), SettingsController::APP_ID, SettingsController::SHELL_MODE_KEY, 'dock')
-                : 'dock',
+                ? $this->config->getUserValue($user->getUID(), SettingsController::APP_ID, SettingsController::SHELL_MODE_KEY, 'taskbar')
+                : 'taskbar',
             'dockAlwaysVisible' => $user === null
                 || $this->config->getUserValue($user->getUID(), SettingsController::APP_ID, SettingsController::DOCK_ALWAYS_VISIBLE_KEY, 'yes') !== 'no',
             'clockHourCycle' => $user !== null

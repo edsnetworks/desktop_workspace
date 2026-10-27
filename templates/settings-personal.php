@@ -23,7 +23,7 @@ $l = \OC::$server->getL10N('desktop_workspace');
             <h4><?= p($l->t('Windows, taskbar and menus')) ?></h4>
             <p><label for="desktop-decoration"><?= p($l->t('Decoration style')) ?></label>
                 <select id="desktop-decoration" <?= $_['userDecorationsEnabled'] ? '' : 'disabled' ?>>
-                    <option value="standard" <?= $_['decoration'] === 'standard' ? 'selected' : '' ?>>macOS</option>
+                    <option value="macos" <?= $_['decoration'] === 'macos' ? 'selected' : '' ?>>macOS</option>
                 </select></p>
             <p><label for="desktop-decoration-color"><?= p($l->t('Color mode')) ?></label>
                 <select id="desktop-decoration-color" <?= $_['userDecorationsEnabled'] ? '' : 'disabled' ?>>
@@ -38,7 +38,7 @@ $l = \OC::$server->getL10N('desktop_workspace');
                 <label for="desktop-icon-decoration-linked"><?= p($l->t('Match window decoration')) ?></label></p>
             <p><label for="desktop-icon-decoration"><?= p($l->t('Icon style')) ?></label>
                 <select id="desktop-icon-decoration" <?= ($_['userDecorationsEnabled'] && !$_['iconDecorationLinked']) ? '' : 'disabled' ?>>
-                    <option value="standard" <?= $_['iconDecoration'] === 'standard' ? 'selected' : '' ?>>macOS</option>
+                    <option value="macos" <?= $_['iconDecoration'] === 'macos' ? 'selected' : '' ?>>macOS</option>
                 </select></p>
             <p><label for="desktop-icon-color"><?= p($l->t('Icon color mode')) ?></label>
                 <select id="desktop-icon-color" <?= ($_['userDecorationsEnabled'] && !$_['iconDecorationLinked']) ? '' : 'disabled' ?>>
@@ -57,18 +57,18 @@ $l = \OC::$server->getL10N('desktop_workspace');
         <h4><?= p($l->t('Window controls')) ?></h4>
         <fieldset class="desktop-radio-group">
             <legend><?= p($l->t('Window control position')) ?></legend>
-            <label><input type="radio" name="desktop-window-controls-side" value="left" <?= $_['windowControlsSide'] !== 'right' ? 'checked' : '' ?> /> <?= p($l->t('Left side')) ?></label>
-            <label><input type="radio" name="desktop-window-controls-side" value="right" <?= $_['windowControlsSide'] === 'right' ? 'checked' : '' ?> /> <?= p($l->t('Right side')) ?></label>
+            <label><input type="radio" name="desktop-window-controls-side" value="left" <?= $_['windowControlsSide'] === 'left' ? 'checked' : '' ?> /> <?= p($l->t('Left side')) ?></label>
+            <label><input type="radio" name="desktop-window-controls-side" value="right" <?= $_['windowControlsSide'] !== 'left' ? 'checked' : '' ?> /> <?= p($l->t('Right side')) ?></label>
         </fieldset>
     </div>
     <div class="desktop-appearance-group">
         <h4><?= p($l->t('Desktop panel')) ?></h4>
         <fieldset class="desktop-radio-group">
             <legend><?= p($l->t('Choose how open apps and controls are shown')) ?></legend>
-            <label><input type="radio" name="desktop-shell-mode" value="taskbar" <?= $_['shellMode'] === 'taskbar' ? 'checked' : '' ?> /> <?= p($l->t('Taskbar')) ?></label>
-            <label><input type="radio" name="desktop-shell-mode" value="dock" <?= $_['shellMode'] !== 'taskbar' ? 'checked' : '' ?> /> <?= p($l->t('Dock')) ?></label>
+            <label><input type="radio" name="desktop-shell-mode" value="taskbar" <?= $_['shellMode'] !== 'dock' ? 'checked' : '' ?> /> <?= p($l->t('Taskbar')) ?></label>
+            <label><input type="radio" name="desktop-shell-mode" value="dock" <?= $_['shellMode'] === 'dock' ? 'checked' : '' ?> /> <?= p($l->t('Dock')) ?></label>
         </fieldset>
-        <div id="desktop-dock-always-visible-setting" <?= $_['shellMode'] !== 'taskbar' ? '' : 'hidden' ?>>
+        <div id="desktop-dock-always-visible-setting" <?= $_['shellMode'] === 'dock' ? '' : 'hidden' ?>>
             <p>
                 <input type="checkbox" id="desktop-dock-always-visible" class="checkbox" <?= $_['dockAlwaysVisible'] ? 'checked' : '' ?> />
                 <label for="desktop-dock-always-visible"><?= p($l->t('Always show the dock')) ?></label>

@@ -326,13 +326,13 @@ class SettingsController extends Controller {
                 'showHome' => false,
                 'desktopFolder' => '',
                 'trashNoConfirm' => false,
-                'decoration' => DecorationService::STANDARD,
+                'decoration' => DecorationService::DEFAULT_STYLE,
                 'decorationColor' => DecorationService::FOLLOW_NEXTCLOUD,
                 'iconDecorationLinked' => true,
-                'iconDecoration' => DecorationService::STANDARD,
+                'iconDecoration' => DecorationService::DEFAULT_STYLE,
                 'iconColor' => DecorationService::FOLLOW_NEXTCLOUD,
-                'windowControlsSide' => 'left',
-                'shellMode' => 'dock',
+                'windowControlsSide' => 'right',
+                'shellMode' => 'taskbar',
                 'dockAlwaysVisible' => true,
                 'clockHourCycle' => '24',
             ],
@@ -379,12 +379,12 @@ class SettingsController extends Controller {
         $truthy = static fn (string $v): bool => $v === 'yes' || $v === 'true' || $v === '1';
         $result = ['status' => 'ok'];
         if ($window_controls_side !== null) {
-            $value = $window_controls_side === 'right' ? 'right' : 'left';
+            $value = $window_controls_side === 'left' ? 'left' : 'right';
             $this->config->setUserValue($uid, self::APP_ID, self::WINDOW_CONTROLS_SIDE_KEY, $value);
             $result['windowControlsSide'] = $value;
         }
         if ($shell_mode !== null) {
-            $value = $shell_mode === 'taskbar' ? 'taskbar' : 'dock';
+            $value = $shell_mode === 'dock' ? 'dock' : 'taskbar';
             $this->config->setUserValue($uid, self::APP_ID, self::SHELL_MODE_KEY, $value);
             $result['shellMode'] = $value;
         }
@@ -399,9 +399,9 @@ class SettingsController extends Controller {
             $result['clockHourCycle'] = $value;
         }
         if ($decoration !== null) {
-            $selected = DecorationService::STANDARD;
+            $selected = DecorationService::MACOS;
             if (!$this->decorationService->userSelectionEnabled()) {
-                $selected = DecorationService::STANDARD;
+                $selected = DecorationService::DEFAULT_STYLE;
             }
             $this->config->setUserValue($uid, self::APP_ID, self::DECORATION_KEY, $selected);
             $result['decoration'] = $selected;

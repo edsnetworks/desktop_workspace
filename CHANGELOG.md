@@ -3,16 +3,19 @@
 All notable changes to the Desktop app are documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/).
 
-## 0.19.0 – 2026-10-27
-
-### Changed
-- The Redmond and Retro decoration styles have been removed. The former Standard style is now the only one and is named macOS.
-- New users start with the Dock and the window controls on the left. Saved personal choices are kept.
-
 ## 0.18.5 – 2026-10-27
 
 ### Fixed
 - Stored the large per-user JSON values (window states, icon positions, taskbar/desktop/app pins) as lazy user config, which removes the repeated "desktop_workspace:window_states is larger than 128 bytes. It should be declared as lazy" deprecation entries from the Nextcloud log. Values saved by earlier versions are still read and become lazy the next time they are saved.
+
+## 0.19.1 – 2026-10-27
+
+### Added
+- macOS decoration preset with a macOS-style menu bar (restored from the server copy, where it was not yet part of the repository).
+
+### Changed
+- The Redmond, Retro and Standard decoration styles have been removed; macOS is the only style.
+- Stored the large per-user JSON values (window states, icon positions, pins) as lazy user config, which removes the "desktop_workspace:window_states is larger than 128 bytes. It should be declared as lazy" deprecation entries from the Nextcloud log. Values saved by earlier versions are still read and become lazy the next time they are saved.
 
 ## 0.18.4 – 2026-09-21
 

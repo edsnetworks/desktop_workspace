@@ -72,8 +72,8 @@ class PageController extends Controller {
                 'Desktop Files' => $l->t('Desktop Files'),
             ],
             ...$this->decorationService->appearanceForUser($user?->getUID()),
-            'windowControlsSide' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::WINDOW_CONTROLS_SIDE_KEY, 'left') : 'left',
-            'shellMode' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::SHELL_MODE_KEY, 'dock') : 'dock',
+            'windowControlsSide' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::WINDOW_CONTROLS_SIDE_KEY, 'right') : 'right',
+            'shellMode' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::SHELL_MODE_KEY, 'taskbar') : 'taskbar',
             'dockAlwaysVisible' => $uid === null || $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::DOCK_ALWAYS_VISIBLE_KEY, 'yes') !== 'no',
             'clockHourCycle' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::CLOCK_HOUR_CYCLE_KEY, '24') : '24',
         ]);
@@ -137,12 +137,20 @@ class PageController extends Controller {
             'showHome' => $uid !== null && $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::SHOW_HOME_KEY, 'no') === 'yes',
             'desktopFolder' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::DESKTOP_FOLDER_KEY, '') : '',
             'trashNoConfirm' => $uid !== null && $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::TRASH_NO_CONFIRM_KEY, 'no') === 'yes',
-            'windowControlsSide' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::WINDOW_CONTROLS_SIDE_KEY, 'left') : 'left',
-            'shellMode' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::SHELL_MODE_KEY, 'dock') : 'dock',
+            'windowControlsSide' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::WINDOW_CONTROLS_SIDE_KEY, 'right') : 'right',
+            'shellMode' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::SHELL_MODE_KEY, 'taskbar') : 'taskbar',
             'dockAlwaysVisible' => $uid === null || $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::DOCK_ALWAYS_VISIBLE_KEY, 'yes') !== 'no',
             'clockHourCycle' => $uid !== null ? $this->config->getUserValue($uid, SettingsController::APP_ID, SettingsController::CLOCK_HOUR_CYCLE_KEY, '24') : '24',
             ...$this->decorationService->appearanceForUser($uid),
         ]);
+        foreach ([
+            ['apple-mobile-web-app-capable', 'yes'],
+            ['mobile-web-app-capable', 'yes'],
+            ['apple-mobile-web-app-status-bar-style', 'black-translucent'],
+            ['apple-mobile-web-app-title', 'Desktop'],
+        ] as [$name, $content]) {
+            \OCP\Util::addHeader('meta', ['name' => $name, 'content' => $content]);
+        }
         $csp = new ContentSecurityPolicy();
         $csp->addAllowedFrameDomain("'self'");
         $csp->addAllowedFrameDomain('https:');
@@ -153,7 +161,6 @@ class PageController extends Controller {
         // without exposing either device to promoted cross-origin External Sites frames.
         // Nextcloud still emits both the legacy and current policy headers, so keep them in
         // agreement while retaining the existing cross-origin fullscreen delegation.
-        $response->addHeader('Feature-Policy', "autoplay 'self';camera 'self';fullscreen *;geolocation 'none';microphone 'self';payment 'none'");
         $response->addHeader('Permissions-Policy', 'camera=(self), microphone=(self), fullscreen=*');
         return $response;
     }
